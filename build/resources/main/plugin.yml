@@ -1,0 +1,4 @@
+name: Crumb
+version: '1.0-SNAPSHOT'
+main: io.github.simplex.crumb.Crumb
+api-version: 1.18

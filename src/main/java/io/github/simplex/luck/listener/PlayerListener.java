@@ -1,10 +1,10 @@
-package io.github.simplex.crumb.listener;
+package io.github.simplex.luck.listener;
 
-import io.github.simplex.crumb.Crumb;
-import io.github.simplex.crumb.Luck;
+import io.github.simplex.luck.FeelingLucky;
+import io.github.simplex.luck.player.Luck;
+import io.github.simplex.luck.player.PlayerHandler;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Witch;
@@ -23,9 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerListener implements Listener {
-    private final Crumb plugin;
+    private final FeelingLucky plugin;
 
-    public PlayerListener(Crumb plugin) {
+    public PlayerListener(FeelingLucky plugin) {
         this.plugin = plugin;
     }
 
@@ -36,9 +36,9 @@ public class PlayerListener implements Listener {
             return;
         }
         Player player = (Player) event.getEntity();
-        Luck luck = plugin.handler.getLuckContainer(player);
+        Luck luck = PlayerHandler.getLuckContainer(player);
         if (ListBox.acceptedCauses.contains(event.getCause())) {
-            if (!luck.isDefault()) {
+            if (luck.notDefault()) {
                 double percentage = luck.getPercentage();
                 if (luck.quickRNG(percentage)) {
                     event.setCancelled(true);
@@ -49,7 +49,7 @@ public class PlayerListener implements Listener {
         }
 
         if (ListBox.sideCauses.contains(event.getCause())) {
-            if (!luck.isDefault()) {
+            if (luck.notDefault()) {
                 double percentage = luck.getPercentage();
                 if (luck.quickRNG(percentage)) {
                     event.setCancelled(true);
@@ -64,8 +64,8 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void restoreHunger(PlayerItemConsumeEvent event) {
         ItemStack item = event.getItem();
-        Luck luck = plugin.handler.getLuckContainer(event.getPlayer());
-        if (!luck.isDefault()) {
+        Luck luck = PlayerHandler.getLuckContainer(event.getPlayer());
+        if (luck.notDefault()) {
             double percentage = luck.getPercentage();
             ListBox.foods.forEach(food -> {
                 if (item.isSimilar(food)) {
@@ -82,7 +82,7 @@ public class PlayerListener implements Listener {
         Action action = event.getAction();
         ItemStack foot = new ItemStack(Material.RABBIT_FOOT);
         Player player = event.getPlayer();
-        Luck luck = plugin.handler.getLuckContainer(player);
+        Luck luck = PlayerHandler.getLuckContainer(player);
         if (action.isRightClick() && player.getInventory().getItemInMainHand().isSimilar(foot)) {
             double rng = luck.RNG().nextDouble(2.0, 5.0);
             player.getInventory().remove(player.getInventory().getItemInMainHand());
@@ -106,7 +106,7 @@ public class PlayerListener implements Listener {
             return;
         }
 
-        Luck luck = plugin.handler.getLuckContainer(player);
+        Luck luck = PlayerHandler.getLuckContainer(player);
         if (cause.equals(DamageCause.MAGIC) || cause.equals(DamageCause.POISON)) {
             if (luck.quickRNG(33.0)) {
                 luck.takeFrom(5.0);

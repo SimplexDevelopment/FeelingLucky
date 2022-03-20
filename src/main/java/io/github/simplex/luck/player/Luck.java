@@ -1,6 +1,7 @@
-package io.github.simplex.crumb;
+package io.github.simplex.luck.player;
 
 import io.github.simplex.api.LuckContainer;
+import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 
@@ -10,17 +11,17 @@ public class Luck implements LuckContainer {
     private final Player player;
     private final double multiplier;
     private final double BASE_VALUE;
+    private final PlayerLuckChangeEvent event;
 
     public Luck(Player player) {
-        this.player = player;
-        multiplier = 1.0;
-        BASE_VALUE = player.getAttribute(Attribute.GENERIC_LUCK).getDefaultValue();
+        this(player, 1.0);
     }
 
     public Luck(Player player, double multiplier) {
         this.player = player;
         this.multiplier = multiplier;
         BASE_VALUE = player.getAttribute(Attribute.GENERIC_LUCK).getDefaultValue();
+        event = new PlayerLuckChangeEvent(player);
     }
 
     @Override
@@ -66,7 +67,7 @@ public class Luck implements LuckContainer {
         }
 
         if (multiplier() > 0.0) {
-            return (percentage >= (rng * multiplier()));
+            return ((percentage * multiplier()) >= rng);
         }
 
         return (percentage >= rng);
@@ -83,22 +84,33 @@ public class Luck implements LuckContainer {
 
     public void setValue(double value) {
         player.getAttribute(Attribute.GENERIC_LUCK).setBaseValue(value);
+        Bukkit.getPluginManager().callEvent(event);
     }
 
     public void addTo(double value) {
         setValue(baseValue() + value);
+        Bukkit.getPluginManager().callEvent(event);
     }
 
     public void takeFrom(double value) {
         setValue(baseValue() - value);
+        Bukkit.getPluginManager().callEvent(event);
     }
 
     public double getPercentage() {
         return baseValue() - defaultValue();
     }
 
-    public boolean isDefault() {
-        return baseValue() == defaultValue();
+    public boolean notDefault() {
+        return baseValue() != defaultValue();
+    }
+
+    public boolean lessThan(double value) {
+        return baseValue() < value;
+    }
+
+    public boolean greaterThan (double value) {
+        return baseValue() > value;
     }
 
     @Override

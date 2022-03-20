@@ -1,4 +1,5 @@
-name: Crumb
+name: FeelingLucky
 version: '${version}'
-main: io.github.simplex.crumb.Crumb
+author: SimplexDevelopment
+main: io.github.simplex.luck.FeelingLucky
 api-version: 1.18

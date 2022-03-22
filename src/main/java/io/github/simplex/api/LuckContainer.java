@@ -3,7 +3,9 @@ package io.github.simplex.api;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 
-public interface LuckContainer {
+import java.io.Serializable;
+
+public interface LuckContainer extends Serializable {
     Attribute asAttribute();
 
     double getNumber();

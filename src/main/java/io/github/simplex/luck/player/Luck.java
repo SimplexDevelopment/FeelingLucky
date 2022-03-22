@@ -4,9 +4,12 @@ import io.github.simplex.api.LuckContainer;
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.SplittableRandom;
 
+@SuppressWarnings("all")
 public class Luck implements LuckContainer {
     private final Player player;
     private final double multiplier;
@@ -22,6 +25,12 @@ public class Luck implements LuckContainer {
         this.multiplier = multiplier;
         BASE_VALUE = player.getAttribute(Attribute.GENERIC_LUCK).getDefaultValue();
         event = new PlayerLuckChangeEvent(player);
+    }
+
+    @Contract(pure = true,
+            value = "-> new")
+    public static @NotNull SplittableRandom RNG() {
+        return new SplittableRandom();
     }
 
     @Override
@@ -52,10 +61,6 @@ public class Luck implements LuckContainer {
     @Override
     public Player associatedPlayer() {
         return player;
-    }
-
-    public SplittableRandom RNG() {
-        return new SplittableRandom();
     }
 
     public boolean quickRNG(double percentage) {
@@ -109,7 +114,7 @@ public class Luck implements LuckContainer {
         return baseValue() < value;
     }
 
-    public boolean greaterThan (double value) {
+    public boolean greaterThan(double value) {
         return baseValue() > value;
     }
 

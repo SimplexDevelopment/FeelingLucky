@@ -1,5 +1,6 @@
 package io.github.simplex.luck.listener;
 
+import io.github.simplex.lib.PotionEffectBuilder;
 import io.github.simplex.luck.FeelingLucky;
 import io.github.simplex.luck.player.Luck;
 import io.github.simplex.luck.player.PlayerHandler;
@@ -22,12 +23,7 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayerListener implements Listener {
-    private final FeelingLucky plugin;
-
-    public PlayerListener(FeelingLucky plugin) {
-        this.plugin = plugin;
-    }
+public record PlayerListener(FeelingLucky plugin) implements Listener {
 
     @EventHandler
     public void takeDamage(EntityDamageEvent event) {
@@ -40,6 +36,17 @@ public class PlayerListener implements Listener {
         if (ListBox.acceptedCauses.contains(event.getCause())) {
             if (luck.notDefault()) {
                 double percentage = luck.getPercentage();
+
+                if (percentage < 0 || PlayerHandler.isMarked(player)) {
+                    percentage = Math.abs(percentage);
+                    if (luck.quickRNG(percentage)) {
+                        event.setCancelled(true);
+                        player.damage(event.getDamage() * 2);
+                        player.sendMessage(Component.empty().content("You were unlucky and took double damage."));
+                    }
+                    return;
+                }
+
                 if (luck.quickRNG(percentage)) {
                     event.setCancelled(true);
                     player.damage(event.getDamage() / 2);
@@ -51,6 +58,24 @@ public class PlayerListener implements Listener {
         if (ListBox.sideCauses.contains(event.getCause())) {
             if (luck.notDefault()) {
                 double percentage = luck.getPercentage();
+
+                /*
+                 * If a player's luck stat is a negative number, or they are "marked",
+                 * this will trigger instead of the regular luck spin.
+                 */
+                if (percentage < 0 || PlayerHandler.isMarked(player)) {
+                    percentage = Math.abs(percentage);
+                    if (luck.quickRNG(percentage)) {
+                        event.setCancelled(true);
+                        player.addPotionEffect(PotionEffectBuilder.newEffect()
+                                .type(ListBox.potionEffects.get(Luck.RNG().nextInt(ListBox.potionEffects.size() - 1)))
+                                .amplifier(Luck.RNG().nextInt(1, 5))
+                                .duration(Luck.RNG().nextInt(1, 120))
+                                .create());
+                    }
+                    return;
+                }
+
                 if (luck.quickRNG(percentage)) {
                     event.setCancelled(true);
                     player.getActivePotionEffects().removeIf(p -> ListBox.potionEffects.contains(p.getType()));
@@ -84,7 +109,7 @@ public class PlayerListener implements Listener {
         Player player = event.getPlayer();
         Luck luck = PlayerHandler.getLuckContainer(player);
         if (action.isRightClick() && player.getInventory().getItemInMainHand().isSimilar(foot)) {
-            double rng = luck.RNG().nextDouble(2.0, 5.0);
+            double rng = Luck.RNG().nextDouble(2.0, 5.0);
             player.getInventory().remove(player.getInventory().getItemInMainHand());
             luck.addTo(rng);
 

@@ -19,6 +19,18 @@ public record PlayerHandler(FeelingLucky plugin) implements Listener {
         return playerLuckMap.get(player);
     }
 
+    public static void markPlayer(Player player) {
+        markedPlayers.add(player);
+    }
+
+    public static void unmarkPlayer(Player player) {
+        markedPlayers.remove(player);
+    }
+
+    public static boolean isMarked(Player player) {
+        return markedPlayers.contains(player);
+    }
+
     @EventHandler
     public void initializePlayer(PlayerLoginEvent event) {
         Player player = event.getPlayer();
@@ -43,17 +55,5 @@ public record PlayerHandler(FeelingLucky plugin) implements Listener {
 
     public void updatePlayer(Player player, Luck luck) {
         playerLuckMap.replace(player, luck);
-    }
-
-    public static void markPlayer(Player player) {
-        markedPlayers.add(player);
-    }
-
-    public static void unmarkPlayer(Player player) {
-        markedPlayers.remove(player);
-    }
-
-    public static boolean isMarked(Player player) {
-        return markedPlayers.contains(player);
     }
 }

@@ -2,13 +2,12 @@ package io.github.simplex.luck.player;
 
 import io.github.simplex.luck.FeelingLucky;
 import io.github.simplex.luck.SneakyWorker;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Contract;
 
-import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 public class PlayerConfig extends YamlConfiguration {
     private final File configFile;
@@ -16,14 +15,24 @@ public class PlayerConfig extends YamlConfiguration {
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public PlayerConfig(FeelingLucky plugin, Player player) {
-        File dataFolder = new File(plugin.getDataFolder(), "players");
+        File dataFolder = plugin.getDataFolder();
         if (!dataFolder.exists()) dataFolder.mkdirs();
         File file = new File(dataFolder, player.getUniqueId() + ".yml");
         if (!file.exists()) {
+            String name = "username: " + player.getName();
+            String luck = "luck: " + PlayerHandler.getLuckContainer(player).defaultValue();
+            String multiplier = "multiplier: " + 1.0;
+
             SneakyWorker.sneakyTry(() -> {
                 file.createNewFile();
-                InputStreamReader reader = new InputStreamReader(plugin.getResource("default_player.yml"));
-                loadConfiguration(reader).save(file);
+
+                BufferedWriter writer = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8));
+                writer.write(name);
+                writer.newLine();
+                writer.write(luck);
+                writer.newLine();
+                writer.write(multiplier);
+                writer.close();
             });
         }
         configFile = file;
@@ -31,10 +40,20 @@ public class PlayerConfig extends YamlConfiguration {
 
         if (config.getString("username").equalsIgnoreCase("replace")) {
             config.set("username", player.getName());
-            config.set("luck", new Luck(player).defaultValue());
+            config.set("luck", PlayerHandler.getLuckContainer(player).defaultValue());
             config.set("multiplier", "1.0");
             save();
         }
+    }
+
+    protected PlayerConfig(File file) {
+        this.configFile = file;
+        config = loadConfiguration(configFile);
+    }
+
+    @Contract("_ -> new")
+    public static PlayerConfig loadFrom(File file) {
+        return new PlayerConfig(file);
     }
 
     public void save() {

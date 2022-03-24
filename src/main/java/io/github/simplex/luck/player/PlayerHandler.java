@@ -34,10 +34,15 @@ public record PlayerHandler(FeelingLucky plugin) implements Listener {
     @EventHandler
     public void initializePlayer(PlayerLoginEvent event) {
         Player player = event.getPlayer();
-        PlayerConfig config = new PlayerConfig(plugin, player);
+        PlayerConfig config = FeelingLucky.getConfigMap().get(player.getUniqueId());
+
+        if (config == null) {
+            config = new PlayerConfig(plugin, player);
+            FeelingLucky.getConfigMap().put(player.getUniqueId(), config);
+        }
 
         String username = config.getString("username");
-        double luckstat = config.getDouble("luck");
+        double luck = config.getDouble("luck");
         double multiplier = config.getDouble("multiplier");
 
         if (!player.getName().equalsIgnoreCase(username)) {
@@ -46,11 +51,10 @@ public record PlayerHandler(FeelingLucky plugin) implements Listener {
             config.load();
         }
 
-        Luck luck = new Luck(player, multiplier);
-        luck.setValue(luckstat);
+        Luck container = new Luck(player, multiplier);
+        container.setValue(luck);
 
-        FeelingLucky.getConfigList().add(config);
-        playerLuckMap.put(player, luck);
+        playerLuckMap.put(player, container);
     }
 
     public void updatePlayer(Player player, Luck luck) {

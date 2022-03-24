@@ -15,6 +15,12 @@ public class SneakyWorker {
         }
     }
 
+    public static void silentTry(SneakyTry sneakyTry) {
+        try {
+            sneakyTry.tryThis();
+        } catch (Exception ignored) {}
+    }
+
     public interface SneakyTry {
         void tryThis() throws Exception;
     }

@@ -6,7 +6,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.nio.charset.StandardCharsets;
 
 public class PlayerConfig extends YamlConfiguration {
@@ -38,7 +40,9 @@ public class PlayerConfig extends YamlConfiguration {
         configFile = file;
         config = loadConfiguration(configFile);
 
-        if (config.getString("username").equalsIgnoreCase("replace")) {
+        String tempUsername = config.getString("username");
+
+        if (tempUsername != null && tempUsername.equalsIgnoreCase("replace")) {
             config.set("username", player.getName());
             config.set("luck", PlayerHandler.getLuckContainer(player).defaultValue());
             config.set("multiplier", "1.0");

@@ -6,7 +6,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public final class FeelingLucky extends JavaPlugin {
     private static final Map<UUID, PlayerConfig> configMap = new HashMap<>();

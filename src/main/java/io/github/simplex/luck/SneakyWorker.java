@@ -1,6 +1,9 @@
 package io.github.simplex.luck;
 
+import io.github.simplex.luck.player.Luck;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Item;
+import org.bukkit.inventory.ItemStack;
 
 public class SneakyWorker {
     public static void sneakyTry(SneakyTry sneakyTry) {
@@ -15,10 +18,18 @@ public class SneakyWorker {
         }
     }
 
-    public static void silentTry(SneakyTry sneakyTry) {
+    public static void quietTry(SneakyTry sneakyTry) {
         try {
             sneakyTry.tryThis();
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
+    }
+
+    public static void move(Item item) {
+        ItemStack stack = item.getItemStack();
+        int rng = (Luck.RNG().nextInt(2, 5)) + stack.getAmount();
+        stack.setAmount(rng);
+        item.setItemStack(stack);
     }
 
     public interface SneakyTry {

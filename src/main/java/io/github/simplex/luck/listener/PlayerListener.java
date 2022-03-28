@@ -3,26 +3,36 @@ package io.github.simplex.luck.listener;
 import io.github.simplex.lib.PotionEffectBuilder;
 import io.github.simplex.luck.FeelingLucky;
 import io.github.simplex.luck.ListBox;
+import io.github.simplex.luck.SneakyWorker;
 import io.github.simplex.luck.player.Luck;
 import io.github.simplex.luck.player.PlayerHandler;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Witch;
+import org.bukkit.World;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 public record PlayerListener(FeelingLucky plugin) implements Listener {
+
+    private static final Map<UUID, Player> entityPlayerMap = new HashMap<>();
 
     @EventHandler
     public void takeDamage(EntityDamageEvent event) {
@@ -70,11 +80,7 @@ public record PlayerListener(FeelingLucky plugin) implements Listener {
                     percentage = Math.abs(percentage);
                     if (luck.quickRNG(percentage)) {
                         event.setCancelled(true);
-                        player.addPotionEffect(PotionEffectBuilder.newEffect()
-                                .type(ListBox.potionEffects.get(Luck.RNG().nextInt(ListBox.potionEffects.size() - 1)))
-                                .amplifier(Luck.RNG().nextInt(1, 5))
-                                .duration(Luck.RNG().nextInt(1, 120))
-                                .create());
+                        player.addPotionEffect(PotionEffectBuilder.newEffect().type(ListBox.potionEffects.get(Luck.RNG().nextInt(ListBox.potionEffects.size() - 1))).amplifier(Luck.RNG().nextInt(1, 5)).duration(Luck.RNG().nextInt(1, 120)).create());
                     }
                     return;
                 }
@@ -90,15 +96,65 @@ public record PlayerListener(FeelingLucky plugin) implements Listener {
     }
 
     @EventHandler
+    public void extraBlockDrops(BlockDropItemEvent event) {
+        Player player = event.getPlayer();
+        Luck luck = PlayerHandler.getLuckContainer(player);
+        List<Item> items = event.getItems();
+        if (luck.quickRNG(luck.getPercentage())) {
+            items.forEach(SneakyWorker::move);
+        }
+    }
+
+    @EventHandler
+    public void checkForPreItemDrop(EntityDamageByEntityEvent event) {
+        if (!(event.getEntity() instanceof LivingEntity entity)) {
+            return;
+        }
+
+        if (!(event.getDamager() instanceof Player player)) {
+            return;
+        }
+
+        if (!(entity.getHealth() <= 0.0)) {
+            return;
+        }
+
+        if (entity instanceof Witch witch) {
+            if (Luck.quickRNG2(33.0)) {
+                Location location = witch.getLocation();
+                World world = location.getWorld();
+                Item item = world.dropItemNaturally(location, new ItemStack(Material.RABBIT_FOOT, 1));
+                new EntityDropItemEvent(witch, item).callEvent();
+            }
+        }
+
+        entityPlayerMap.put(entity.getUniqueId(), player);
+    }
+
+    @EventHandler
+    public void itemDrops(EntityDropItemEvent event) {
+        Entity entity = event.getEntity();
+
+        if (entityPlayerMap.get(entity.getUniqueId()) == null) return;
+
+        Player player = entityPlayerMap.get(entity.getUniqueId());
+        Luck luck = PlayerHandler.getLuckContainer(player);
+        Item item = event.getItemDrop();
+        ItemStack stack = item.getItemStack();
+        int amount = stack.getAmount();
+        if (luck.quickRNG(luck.getPercentage())) {
+            int rng = Luck.RNG().nextInt(2, 5);
+            amount += rng;
+            stack.setAmount(amount);
+            event.getItemDrop().setItemStack(stack);
+        }
+    }
+
+    @EventHandler
     public void restoreHunger(PlayerItemConsumeEvent event) {
         ItemStack item = event.getItem();
         Luck luck = PlayerHandler.getLuckContainer(event.getPlayer());
-        PotionEffect effect = PotionEffectBuilder.newEffect()
-                .type(PotionEffectType.SATURATION)
-                .amplifier(2)
-                .duration(10)
-                .particles(false)
-                .create();
+        PotionEffect effect = PotionEffectBuilder.newEffect().type(PotionEffectType.SATURATION).amplifier(2).duration(10).particles(false).create();
         if (luck.notDefault()) {
             double percentage = luck.getPercentage();
             ListBox.foods.forEach(food -> {
@@ -149,5 +205,4 @@ public record PlayerListener(FeelingLucky plugin) implements Listener {
             }
         }
     }
-
 }

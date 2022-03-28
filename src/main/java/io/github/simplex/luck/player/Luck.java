@@ -33,6 +33,17 @@ public class Luck implements LuckContainer {
         return new SplittableRandom();
     }
 
+    public static boolean quickRNG2(double percentage) {
+        double rng;
+        if (percentage >= 100.0) {
+            rng = 100.0; // 100% chance to trigger, obviously;
+        } else {
+            rng = RNG().nextDouble(0.0, 99.0);
+        }
+
+        return (percentage >= rng);
+    }
+
     @Override
     public Attribute asAttribute() {
         return Attribute.GENERIC_LUCK;
@@ -65,13 +76,13 @@ public class Luck implements LuckContainer {
 
     public boolean quickRNG(double percentage) {
         double rng;
-        if (percentage > 99.0) {
-            rng = RNG().nextDouble(100.0, 199.0);
+        if (percentage >= 100.0) {
+            rng = 100.0; // 100% chance to trigger, obviously;
         } else {
             rng = RNG().nextDouble(0.0, 99.0);
         }
 
-        if (multiplier() > 0.0) {
+        if (multiplier() > 1.0) {
             return ((percentage * multiplier()) >= rng);
         }
 
@@ -87,7 +98,7 @@ public class Luck implements LuckContainer {
         return player.getAttribute(Attribute.GENERIC_LUCK).getDefaultValue();
     }
 
-    public void setValue(double value) {
+    protected void setValue(double value) {
         player.getAttribute(Attribute.GENERIC_LUCK).setBaseValue(value);
         Bukkit.getPluginManager().callEvent(event);
     }

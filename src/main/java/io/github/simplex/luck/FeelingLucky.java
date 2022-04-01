@@ -13,6 +13,7 @@ import java.util.UUID;
 
 public final class FeelingLucky extends JavaPlugin {
     private static final Map<UUID, PlayerConfig> configMap = new HashMap<>();
+    public LuckCMD cmd;
     public PlayerHandler handler;
 
     public static Map<UUID, PlayerConfig> getConfigMap() {
@@ -38,6 +39,10 @@ public final class FeelingLucky extends JavaPlugin {
         } else {
             getLogger().info("There are no player configurations to load.");
         }
+
+        Bukkit.getLogger().info("Attempting to load the Luck command...");
+        cmd = new LuckCMD(this);
+        Bukkit.getLogger().info("Successfully loaded the Luck command!");
 
         Bukkit.getLogger().info("Successfully initialized!");
     }

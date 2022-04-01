@@ -57,7 +57,7 @@ public record PlayerHandler(FeelingLucky plugin) implements Listener {
         playerLuckMap.put(player, container);
     }
 
-    public void updatePlayer(Player player, Luck luck) {
+    public static void updatePlayer(Player player, Luck luck) {
         playerLuckMap.replace(player, luck);
     }
 }

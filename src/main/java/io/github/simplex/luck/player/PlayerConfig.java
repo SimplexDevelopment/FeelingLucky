@@ -11,7 +11,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.nio.charset.StandardCharsets;
 
-public class PlayerConfig extends YamlConfiguration {
+public class PlayerConfig {
     private final File configFile;
     private volatile YamlConfiguration config;
 
@@ -38,7 +38,7 @@ public class PlayerConfig extends YamlConfiguration {
             });
         }
         configFile = file;
-        config = loadConfiguration(configFile);
+        config = YamlConfiguration.loadConfiguration(configFile);
 
         String tempUsername = config.getString("username");
 
@@ -52,7 +52,7 @@ public class PlayerConfig extends YamlConfiguration {
 
     protected PlayerConfig(File file) {
         this.configFile = file;
-        config = loadConfiguration(configFile);
+        config = YamlConfiguration.loadConfiguration(configFile);
     }
 
     @Contract("_ -> new")
@@ -65,7 +65,13 @@ public class PlayerConfig extends YamlConfiguration {
     }
 
     public void load() {
-        SneakyWorker.sneakyTry(() -> config = loadConfiguration(configFile));
+
+        SneakyWorker.sneakyTry(() -> config = YamlConfiguration.loadConfiguration(configFile));
+    }
+
+    public void setLuck(double luck) {
+        config.set("luck", luck);
+        save();
     }
 
     public YamlConfiguration getConfig() {

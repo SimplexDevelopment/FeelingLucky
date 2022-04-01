@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'io.github.simplex'
-version = '1.0-SNAPSHOT'
+version = '1.0-RC02'
 
 repositories {
     mavenCentral()
@@ -29,6 +29,9 @@ java {
     if (JavaVersion.current() < javaVersion) {
         toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
     }
+
+    withSourcesJar();
+    withJavadocJar();
 }
 
 tasks.withType(JavaCompile).configureEach {

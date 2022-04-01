@@ -1,4 +1,5 @@
-name: Crumb
+name: FeelingLucky
 version: '1.0-SNAPSHOT'
-main: io.github.simplex.crumb.Crumb
+author: SimplexDevelopment
+main: io.github.simplex.luck.FeelingLucky
 api-version: 1.18

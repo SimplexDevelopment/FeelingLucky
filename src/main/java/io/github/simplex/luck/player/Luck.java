@@ -89,6 +89,10 @@ public class Luck implements LuckContainer {
         return (percentage >= rng);
     }
 
+    public void reset() {
+        setValue(defaultValue());
+    }
+
     @Override
     public double baseValue() {
         return BASE_VALUE;
@@ -98,7 +102,7 @@ public class Luck implements LuckContainer {
         return player.getAttribute(Attribute.GENERIC_LUCK).getDefaultValue();
     }
 
-    protected void setValue(double value) {
+    public void setValue(double value) {
         player.getAttribute(Attribute.GENERIC_LUCK).setBaseValue(value);
         Bukkit.getPluginManager().callEvent(event);
     }

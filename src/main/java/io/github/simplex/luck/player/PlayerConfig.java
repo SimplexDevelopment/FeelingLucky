@@ -2,6 +2,7 @@ package io.github.simplex.luck.player;
 
 import io.github.simplex.luck.FeelingLucky;
 import io.github.simplex.luck.SneakyWorker;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
@@ -22,7 +23,7 @@ public class PlayerConfig {
         File file = new File(dataFolder, player.getUniqueId() + ".yml");
         if (!file.exists()) {
             String name = "username: " + player.getName();
-            String luck = "luck: " + PlayerHandler.getLuckContainer(player).defaultValue();
+            String luck = "luck: " + player.getAttribute(Attribute.GENERIC_LUCK).getDefaultValue();
             String multiplier = "multiplier: " + 1.0;
 
             SneakyWorker.sneakyTry(() -> {

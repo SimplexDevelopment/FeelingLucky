@@ -201,7 +201,7 @@ public record PlayerListener(FeelingLucky plugin) implements Listener {
         if (cause.equals(DamageCause.MAGIC) || cause.equals(DamageCause.POISON)) {
             if (luck.quickRNG(33.0)) {
                 luck.takeFrom(5.0);
-                plugin.handler.updatePlayer(player, luck);
+                PlayerHandler.updatePlayer(player, luck);
             }
         }
     }

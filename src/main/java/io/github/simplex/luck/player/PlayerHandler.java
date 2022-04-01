@@ -31,33 +31,33 @@ public record PlayerHandler(FeelingLucky plugin) implements Listener {
         return markedPlayers.contains(player);
     }
 
+    public static void updatePlayer(Player player, Luck luck) {
+        playerLuckMap.replace(player, luck);
+    }
+
     @EventHandler
     public void initializePlayer(PlayerLoginEvent event) {
         Player player = event.getPlayer();
-        PlayerConfig config = FeelingLucky.getConfigMap().get(player.getUniqueId());
+        PlayerConfig playerConfig = FeelingLucky.getConfigMap().get(player.getUniqueId());
 
-        if (config == null) {
-            config = new PlayerConfig(plugin, player);
-            FeelingLucky.getConfigMap().put(player.getUniqueId(), config);
+        if (playerConfig == null) {
+            playerConfig = new PlayerConfig(plugin, player);
+            FeelingLucky.getConfigMap().put(player.getUniqueId(), playerConfig);
         }
 
-        String username = config.getString("username");
-        double luck = config.getDouble("luck");
-        double multiplier = config.getDouble("multiplier");
+        String username = playerConfig.getConfig().getString("username");
+        double luck = playerConfig.getConfig().getDouble("luck");
+        double multiplier = playerConfig.getConfig().getDouble("multiplier");
 
         if (!player.getName().equalsIgnoreCase(username)) {
-            config.set("username", player.getName());
-            config.save();
-            config.load();
+            playerConfig.getConfig().set("username", player.getName());
+            playerConfig.save();
+            playerConfig.load();
         }
 
         Luck container = new Luck(player, multiplier);
         container.setValue(luck);
 
         playerLuckMap.put(player, container);
-    }
-
-    public static void updatePlayer(Player player, Luck luck) {
-        playerLuckMap.replace(player, luck);
     }
 }

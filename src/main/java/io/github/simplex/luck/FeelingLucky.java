@@ -1,5 +1,6 @@
 package io.github.simplex.luck;
 
+import io.github.simplex.luck.listener.PlayerListener;
 import io.github.simplex.luck.player.PlayerConfig;
 import io.github.simplex.luck.player.PlayerHandler;
 import org.bukkit.Bukkit;
@@ -15,6 +16,7 @@ public final class FeelingLucky extends JavaPlugin {
     private static final Map<UUID, PlayerConfig> configMap = new HashMap<>();
     public LuckCMD cmd;
     public PlayerHandler handler;
+    public PlayerListener playerListener;
 
     public static Map<UUID, PlayerConfig> getConfigMap() {
         return configMap;
@@ -24,8 +26,8 @@ public final class FeelingLucky extends JavaPlugin {
     public void onEnable() {
         Bukkit.getLogger().info("Initializing the PlayerHandler...");
         handler = new PlayerHandler(this);
-        Bukkit.getLogger().info("Initialization complete! Attempting to register the handler...");
-        this.getServer().getPluginManager().registerEvents(handler, this);
+        Bukkit.getLogger().info("Initialization complete! Attempting to register the Listeners...");
+        playerListener = new PlayerListener(this);
         Bukkit.getLogger().info("Registration complete! Attempting to load all player configuration files...");
 
         File[] files = getDataFolder().listFiles();

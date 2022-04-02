@@ -1,6 +1,7 @@
 package io.github.simplex.luck.player;
 
 import io.github.simplex.api.LuckContainer;
+import io.github.simplex.luck.FeelingLucky;
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
@@ -36,12 +37,14 @@ public class Luck implements LuckContainer {
     public static boolean quickRNG2(double percentage) {
         double rng;
         if (percentage >= 100.0) {
-            rng = 100.0; // 100% chance to trigger, obviously;
+            rng = 1024.0; // 100% chance to trigger, obviously;
         } else {
-            rng = RNG().nextDouble(0.0, 99.0);
+            rng = RNG().nextDouble(0.0, 1024.0);
         }
 
-        return (percentage >= rng);
+        double actual = (rng / 1024.0) * 100;
+
+        return (percentage >= actual);
     }
 
     @Override
@@ -77,16 +80,18 @@ public class Luck implements LuckContainer {
     public boolean quickRNG(double percentage) {
         double rng;
         if (percentage >= 100.0) {
-            rng = 100.0; // 100% chance to trigger, obviously;
+            rng = 1024.0; // 100% chance to trigger, obviously;
         } else {
-            rng = RNG().nextDouble(0.0, 99.0);
+            rng = RNG().nextDouble(0.0, 1024.0);
         }
+
+        double actual = (rng / 1024) * 100;
 
         if (multiplier() > 1.0) {
-            return ((percentage * multiplier()) >= rng);
+            return ((percentage * multiplier()) >= actual);
         }
 
-        return (percentage >= rng);
+        return (percentage >= actual);
     }
 
     public void reset() {
@@ -104,6 +109,7 @@ public class Luck implements LuckContainer {
 
     public void setValue(double value) {
         player.getAttribute(Attribute.GENERIC_LUCK).setBaseValue(value);
+        FeelingLucky.getConfigMap().get(associatedPlayer().getUniqueId()).setLuck(value);
         Bukkit.getPluginManager().callEvent(event);
     }
 

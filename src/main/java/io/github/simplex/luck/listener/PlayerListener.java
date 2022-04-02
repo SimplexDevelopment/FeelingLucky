@@ -7,6 +7,7 @@ import io.github.simplex.luck.SneakyWorker;
 import io.github.simplex.luck.player.Luck;
 import io.github.simplex.luck.player.PlayerHandler;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -17,7 +18,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
@@ -31,8 +31,11 @@ import java.util.Map;
 import java.util.UUID;
 
 public record PlayerListener(FeelingLucky plugin) implements Listener {
-
     private static final Map<UUID, Player> entityPlayerMap = new HashMap<>();
+
+    public PlayerListener {
+        Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
+    }
 
     @EventHandler
     public void takeDamage(EntityDamageEvent event) {
@@ -187,7 +190,7 @@ public record PlayerListener(FeelingLucky plugin) implements Listener {
     public void witchesBrew(EntityDamageByEntityEvent event) {
         Entity eTEMP = event.getDamager();
         Entity pTEMP = event.getEntity();
-        DamageCause cause = event.getCause();
+        EntityDamageEvent.DamageCause cause = event.getCause();
 
         if (!(pTEMP instanceof Player player)) {
             return;
@@ -198,7 +201,7 @@ public record PlayerListener(FeelingLucky plugin) implements Listener {
         }
 
         Luck luck = PlayerHandler.getLuckContainer(player);
-        if (cause.equals(DamageCause.MAGIC) || cause.equals(DamageCause.POISON)) {
+        if (cause.equals(EntityDamageEvent.DamageCause.MAGIC) || cause.equals(EntityDamageEvent.DamageCause.POISON)) {
             if (luck.quickRNG(33.0)) {
                 luck.takeFrom(5.0);
                 PlayerHandler.updatePlayer(player, luck);

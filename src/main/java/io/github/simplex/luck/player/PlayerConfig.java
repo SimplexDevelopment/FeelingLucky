@@ -43,7 +43,7 @@ public class PlayerConfig {
 
         String tempUsername = config.getString("username");
 
-        if (tempUsername != null && tempUsername.equalsIgnoreCase("replace")) {
+        if (tempUsername != null && !tempUsername.equalsIgnoreCase(player.getName())) {
             config.set("username", player.getName());
             config.set("luck", PlayerHandler.getLuckContainer(player).defaultValue());
             config.set("multiplier", "1.0");

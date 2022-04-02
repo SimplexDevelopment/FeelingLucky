@@ -1,5 +1,6 @@
 package io.github.simplex.luck.player;
 
+import io.github.simplex.luck.FeelingLucky;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;

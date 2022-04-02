@@ -1,6 +1,7 @@
 package io.github.simplex.luck.player;
 
 import io.github.simplex.luck.FeelingLucky;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -12,6 +13,10 @@ import java.util.List;
 import java.util.Map;
 
 public record PlayerHandler(FeelingLucky plugin) implements Listener {
+    public PlayerHandler {
+        Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
+    }
+
     private static final Map<Player, Luck> playerLuckMap = new HashMap<>();
     private static final List<Player> markedPlayers = new ArrayList<>();
 

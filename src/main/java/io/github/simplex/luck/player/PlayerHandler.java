@@ -7,36 +7,23 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public record PlayerHandler(FeelingLucky plugin) implements Listener {
-    public PlayerHandler {
+public class PlayerHandler implements Listener {
+    public final FeelingLucky plugin;
+    private final Map<Player, Luck> playerLuckMap = new HashMap<>();
+
+    public PlayerHandler(FeelingLucky plugin) {
+        this.plugin = plugin;
         Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    private static final Map<Player, Luck> playerLuckMap = new HashMap<>();
-    private static final List<Player> markedPlayers = new ArrayList<>();
-
-    public static Luck getLuckContainer(Player player) {
+    public Luck getLuckContainer(Player player) {
         return playerLuckMap.get(player);
     }
 
-    public static void markPlayer(Player player) {
-        markedPlayers.add(player);
-    }
-
-    public static void unmarkPlayer(Player player) {
-        markedPlayers.remove(player);
-    }
-
-    public static boolean isMarked(Player player) {
-        return markedPlayers.contains(player);
-    }
-
-    public static void updatePlayer(Player player, Luck luck) {
+    public void updatePlayer(Player player, Luck luck) {
         playerLuckMap.replace(player, luck);
     }
 

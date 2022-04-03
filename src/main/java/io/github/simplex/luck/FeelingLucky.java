@@ -34,7 +34,7 @@ public final class FeelingLucky extends JavaPlugin {
         if (files != null) {
             Arrays.stream(files).forEach(file -> {
                 UUID uuid = UUID.fromString(file.getName().split("\\.")[0]);
-                configMap.put(uuid, PlayerConfig.loadFrom(file));
+                configMap.put(uuid, PlayerConfig.loadFrom(this, file));
             });
             configMap.forEach((u, pc) -> pc.load());
             getLogger().info("Successfully loaded all configurations!");

@@ -17,8 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LuckCMD extends Command implements TabCompleter {
+    private final FeelingLucky plugin;
+
     public LuckCMD(FeelingLucky plugin) {
         super("luck", "FeelingLucky main command.", "/<command> <info | set | reset | give | take> [player] [amount]", List.of());
+        this.plugin = plugin;
         setPermission("luck.default");
         plugin.getServer().getCommandMap().register("luck", "FeelingLucky", this);
     }
@@ -37,27 +40,27 @@ public class LuckCMD extends Command implements TabCompleter {
                     return true;
                 }
 
-                Luck luck = PlayerHandler.getLuckContainer(player);
+                Luck luck = plugin.handler.getLuckContainer(player);
                 PlayerConfig config = FeelingLucky.getConfigMap().get(player.getUniqueId());
 
                 switch (args[0]) {
                     case "set" -> {
                         luck.setValue(amount);
-                        PlayerHandler.updatePlayer(player, luck);
+                        plugin.handler.updatePlayer(player, luck);
                         config.setLuck(luck.baseValue());
                         sender.sendMessage(Component.empty().content("Successfully reset " + args[1] + "'s Luck stat."));
                         return true;
                     }
                     case "give" -> {
                         luck.addTo(amount);
-                        PlayerHandler.updatePlayer(player, luck);
+                        plugin.handler.updatePlayer(player, luck);
                         config.setLuck(luck.baseValue());
                         sender.sendMessage(Component.empty().content("Successfully reset " + args[1] + "'s Luck stat."));
                         return true;
                     }
                     case "take" -> {
                         luck.takeFrom(amount);
-                        PlayerHandler.updatePlayer(player, luck);
+                        plugin.handler.updatePlayer(player, luck);
                         config.setLuck(luck.baseValue());
                         sender.sendMessage(Component.empty().content("Successfully reset " + args[1] + "'s Luck stat."));
                         return true;
@@ -65,6 +68,7 @@ public class LuckCMD extends Command implements TabCompleter {
                 }
             } else {
                 sender.sendMessage(Messages.NO_PERMISSION.get());
+                return true;
             }
         }
 
@@ -78,7 +82,7 @@ public class LuckCMD extends Command implements TabCompleter {
                         return true;
                     }
 
-                    Luck luck = PlayerHandler.getLuckContainer(player);
+                    Luck luck = plugin.handler.getLuckContainer(player);
                     sender.sendMessage(Component.empty().content("Luck stat for " + args[1] + ": " + luck.baseValue()));
                     return true;
                 }
@@ -91,10 +95,10 @@ public class LuckCMD extends Command implements TabCompleter {
                         return true;
                     }
 
-                    Luck luck = PlayerHandler.getLuckContainer(player);
+                    Luck luck = plugin.handler.getLuckContainer(player);
                     PlayerConfig config = FeelingLucky.getConfigMap().get(player.getUniqueId());
                     luck.reset();
-                    PlayerHandler.updatePlayer(player, luck);
+                    plugin.handler.updatePlayer(player, luck);
                     config.setLuck(luck.baseValue());
                     sender.sendMessage(Component.empty().content("Successfully reset " + args[1] + "'s Luck stat."));
                     return true;
@@ -108,7 +112,7 @@ public class LuckCMD extends Command implements TabCompleter {
         if (args.length == 1) {
             if ((sender instanceof Player player) && player.hasPermission("luck.default")) {
                 if (args[0].equalsIgnoreCase("info")) {
-                    Luck luck = PlayerHandler.getLuckContainer(player);
+                    Luck luck = plugin.handler.getLuckContainer(player);
                     TextComponent c = Component.text("Your Luck: " + luck.getPercentage());
                     player.sendMessage(c.color(TextColor.color(0, 255, 0)));
                     return true;

@@ -14,10 +14,12 @@ import java.nio.charset.StandardCharsets;
 
 public class PlayerConfig {
     private final File configFile;
+    private final FeelingLucky plugin;
     private volatile YamlConfiguration config;
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public PlayerConfig(FeelingLucky plugin, Player player) {
+        this.plugin = plugin;
         File dataFolder = plugin.getDataFolder();
         if (!dataFolder.exists()) dataFolder.mkdirs();
         File file = new File(dataFolder, player.getUniqueId() + ".yml");
@@ -45,20 +47,21 @@ public class PlayerConfig {
 
         if (tempUsername != null && !tempUsername.equalsIgnoreCase(player.getName())) {
             config.set("username", player.getName());
-            config.set("luck", PlayerHandler.getLuckContainer(player).defaultValue());
+            config.set("luck", plugin.handler.getLuckContainer(player).defaultValue());
             config.set("multiplier", "1.0");
             save();
         }
     }
 
-    protected PlayerConfig(File file) {
+    protected PlayerConfig(FeelingLucky plugin, File file) {
+        this.plugin = plugin;
         this.configFile = file;
         config = YamlConfiguration.loadConfiguration(configFile);
     }
 
-    @Contract("_ -> new")
-    public static PlayerConfig loadFrom(File file) {
-        return new PlayerConfig(file);
+    @Contract("_, _ -> new")
+    public static PlayerConfig loadFrom(FeelingLucky plugin, File file) {
+        return new PlayerConfig(plugin, file);
     }
 
     public void save() {
@@ -66,7 +69,6 @@ public class PlayerConfig {
     }
 
     public void load() {
-
         SneakyWorker.sneakyTry(() -> config = YamlConfiguration.loadConfiguration(configFile));
     }
 

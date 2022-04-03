@@ -8,6 +8,8 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.SplittableRandom;
 
 @SuppressWarnings("all")
@@ -25,7 +27,21 @@ public class Luck implements LuckContainer {
         this.player = player;
         this.multiplier = multiplier;
         BASE_VALUE = player.getAttribute(Attribute.GENERIC_LUCK).getDefaultValue();
-        event = new PlayerLuckChangeEvent(player);
+        event = new PlayerLuckChangeEvent(this);
+    }
+
+    private final List<Player> markedPlayers = new ArrayList<>();
+
+    public void markPlayer(Player player) {
+        markedPlayers.add(player);
+    }
+
+    public void unmarkPlayer(Player player) {
+        markedPlayers.remove(player);
+    }
+
+    public boolean isMarked(Player player) {
+        return markedPlayers.contains(player);
     }
 
     @Contract(pure = true,
@@ -114,13 +130,19 @@ public class Luck implements LuckContainer {
     }
 
     public void addTo(double value) {
+        if (value >= 1024.0 || (baseValue() + value) >= 1024.0) {
+            setValue(1024.0);
+            return;
+        }
         setValue(baseValue() + value);
-        Bukkit.getPluginManager().callEvent(event);
     }
 
     public void takeFrom(double value) {
-        setValue(baseValue() - value);
-        Bukkit.getPluginManager().callEvent(event);
+        if (value <= -1024.0 || (baseValue() - value) <= -1024.0) {
+            setValue(-1024.0);
+            return;
+        }
+        setValue(baseValue() + value);
     }
 
     public double getPercentage() {

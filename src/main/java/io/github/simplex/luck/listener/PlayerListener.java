@@ -5,7 +5,6 @@ import io.github.simplex.luck.FeelingLucky;
 import io.github.simplex.luck.ListBox;
 import io.github.simplex.luck.SneakyWorker;
 import io.github.simplex.luck.player.Luck;
-import io.github.simplex.luck.player.PlayerHandler;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -30,10 +29,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public record PlayerListener(FeelingLucky plugin) implements Listener {
-    private static final Map<UUID, Player> entityPlayerMap = new HashMap<>();
+public class PlayerListener implements Listener {
+    private final Map<UUID, Player> entityPlayerMap = new HashMap<>();
+    private final FeelingLucky plugin;
 
-    public PlayerListener {
+    public PlayerListener(FeelingLucky plugin) {
+        this.plugin = plugin;
         Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
@@ -44,7 +45,7 @@ public record PlayerListener(FeelingLucky plugin) implements Listener {
             return;
         }
         Player player = (Player) event.getEntity();
-        Luck luck = PlayerHandler.getLuckContainer(player);
+        Luck luck = plugin.handler.getLuckContainer(player);
         if (ListBox.acceptedCauses.contains(event.getCause())) {
             if (luck.notDefault()) {
                 double percentage = luck.getPercentage();
@@ -53,7 +54,7 @@ public record PlayerListener(FeelingLucky plugin) implements Listener {
                  * If a player's luck stat is a negative number, or they are "marked",
                  * this will trigger instead of the regular luck spin.
                  */
-                if (percentage < 0 || PlayerHandler.isMarked(player)) {
+                if (percentage < 0 || luck.isMarked(player)) {
                     percentage = Math.abs(percentage);
                     if (luck.quickRNG(percentage)) {
                         event.setCancelled(true);
@@ -79,7 +80,7 @@ public record PlayerListener(FeelingLucky plugin) implements Listener {
                  * If a player's luck stat is a negative number, or they are "marked",
                  * this will trigger instead of the regular luck spin.
                  */
-                if (percentage < 0 || PlayerHandler.isMarked(player)) {
+                if (percentage < 0 || luck.isMarked(player)) {
                     percentage = Math.abs(percentage);
                     if (luck.quickRNG(percentage)) {
                         event.setCancelled(true);
@@ -101,7 +102,7 @@ public record PlayerListener(FeelingLucky plugin) implements Listener {
     @EventHandler
     public void extraBlockDrops(BlockDropItemEvent event) {
         Player player = event.getPlayer();
-        Luck luck = PlayerHandler.getLuckContainer(player);
+        Luck luck = plugin.handler.getLuckContainer(player);
         List<Item> items = event.getItems();
         if (luck.quickRNG(luck.getPercentage())) {
             items.forEach(SneakyWorker::move);
@@ -141,7 +142,7 @@ public record PlayerListener(FeelingLucky plugin) implements Listener {
         if (entityPlayerMap.get(entity.getUniqueId()) == null) return;
 
         Player player = entityPlayerMap.get(entity.getUniqueId());
-        Luck luck = PlayerHandler.getLuckContainer(player);
+        Luck luck = plugin.handler.getLuckContainer(player);
         Item item = event.getItemDrop();
         ItemStack stack = item.getItemStack();
         int amount = stack.getAmount();
@@ -156,7 +157,7 @@ public record PlayerListener(FeelingLucky plugin) implements Listener {
     @EventHandler
     public void restoreHunger(PlayerItemConsumeEvent event) {
         ItemStack item = event.getItem();
-        Luck luck = PlayerHandler.getLuckContainer(event.getPlayer());
+        Luck luck = plugin.handler.getLuckContainer(event.getPlayer());
         PotionEffect effect = PotionEffectBuilder.newEffect().type(PotionEffectType.SATURATION).amplifier(2).duration(10).particles(false).create();
         if (luck.notDefault()) {
             double percentage = luck.getPercentage();
@@ -176,12 +177,12 @@ public record PlayerListener(FeelingLucky plugin) implements Listener {
         Action action = event.getAction();
         ItemStack foot = new ItemStack(Material.RABBIT_FOOT);
         Player player = event.getPlayer();
-        Luck luck = PlayerHandler.getLuckContainer(player);
+        Luck luck = plugin.handler.getLuckContainer(player);
         if (action.isRightClick() && player.getInventory().getItemInMainHand().isSimilar(foot)) {
             double rng = Luck.RNG().nextDouble(2.0, 5.0);
             player.getInventory().remove(player.getInventory().getItemInMainHand());
             luck.addTo(rng);
-
+            plugin.handler.updatePlayer(player, luck);
             player.sendMessage(Component.empty().content("Your luck has been increased by " + rng + " points."));
         }
     }
@@ -200,11 +201,11 @@ public record PlayerListener(FeelingLucky plugin) implements Listener {
             return;
         }
 
-        Luck luck = PlayerHandler.getLuckContainer(player);
+        Luck luck = plugin.handler.getLuckContainer(player);
         if (cause.equals(EntityDamageEvent.DamageCause.MAGIC) || cause.equals(EntityDamageEvent.DamageCause.POISON)) {
             if (luck.quickRNG(33.0)) {
                 luck.takeFrom(5.0);
-                PlayerHandler.updatePlayer(player, luck);
+                plugin.handler.updatePlayer(player, luck);
             }
         }
     }

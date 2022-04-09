@@ -52,6 +52,6 @@ public final class FeelingLucky extends JavaPlugin {
     @Override
     public void onDisable() {
         Bukkit.getLogger().info("Saving all player configurations...");
-        configMap.forEach((u, pc) -> pc.save());
+        configMap.values().forEach(PlayerConfig::save);
     }
 }

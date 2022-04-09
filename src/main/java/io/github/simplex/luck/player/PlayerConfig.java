@@ -47,7 +47,7 @@ public class PlayerConfig {
 
         if (tempUsername != null && !tempUsername.equalsIgnoreCase(player.getName())) {
             config.set("username", player.getName());
-            config.set("luck", plugin.handler.getLuckContainer(player).defaultValue());
+            config.set("luck", plugin.handler.getLuckContainer(player).getDefaultValue());
             config.set("multiplier", "1.0");
             save();
         }

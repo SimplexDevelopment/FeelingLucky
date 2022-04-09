@@ -3,7 +3,6 @@ package io.github.simplex.luck;
 import io.github.simplex.lib.Messages;
 import io.github.simplex.luck.player.Luck;
 import io.github.simplex.luck.player.PlayerConfig;
-import io.github.simplex.luck.player.PlayerHandler;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextColor;
@@ -47,21 +46,21 @@ public class LuckCMD extends Command implements TabCompleter {
                     case "set" -> {
                         luck.setValue(amount);
                         plugin.handler.updatePlayer(player, luck);
-                        config.setLuck(luck.baseValue());
+                        config.setLuck(luck.getValue());
                         sender.sendMessage(Component.empty().content("Successfully reset " + args[1] + "'s Luck stat."));
                         return true;
                     }
                     case "give" -> {
                         luck.addTo(amount);
                         plugin.handler.updatePlayer(player, luck);
-                        config.setLuck(luck.baseValue());
+                        config.setLuck(luck.getValue());
                         sender.sendMessage(Component.empty().content("Successfully reset " + args[1] + "'s Luck stat."));
                         return true;
                     }
                     case "take" -> {
                         luck.takeFrom(amount);
                         plugin.handler.updatePlayer(player, luck);
-                        config.setLuck(luck.baseValue());
+                        config.setLuck(luck.getValue());
                         sender.sendMessage(Component.empty().content("Successfully reset " + args[1] + "'s Luck stat."));
                         return true;
                     }
@@ -83,7 +82,7 @@ public class LuckCMD extends Command implements TabCompleter {
                     }
 
                     Luck luck = plugin.handler.getLuckContainer(player);
-                    sender.sendMessage(Component.empty().content("Luck stat for " + args[1] + ": " + luck.baseValue()));
+                    sender.sendMessage(Component.empty().content("Luck stat for " + args[1] + ": " + luck.getValue()));
                     return true;
                 }
 
@@ -99,7 +98,7 @@ public class LuckCMD extends Command implements TabCompleter {
                     PlayerConfig config = FeelingLucky.getConfigMap().get(player.getUniqueId());
                     luck.reset();
                     plugin.handler.updatePlayer(player, luck);
-                    config.setLuck(luck.baseValue());
+                    config.setLuck(luck.getValue());
                     sender.sendMessage(Component.empty().content("Successfully reset " + args[1] + "'s Luck stat."));
                     return true;
                 }

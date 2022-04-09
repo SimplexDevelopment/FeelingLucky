@@ -58,7 +58,7 @@ public class Luck implements LuckContainer {
             rng = RNG().nextDouble(0.0, 1024.0);
         }
 
-        double actual = (rng / 1024.0) * 100;
+        double actual = Math.round((rng / 1024.0) * 100);
 
         return (percentage >= actual);
     }
@@ -101,7 +101,7 @@ public class Luck implements LuckContainer {
             rng = RNG().nextDouble(0.0, 1024.0);
         }
 
-        double actual = (rng / 1024) * 100;
+        double actual = Math.round((rng / 1024) * 100);
 
         if (multiplier() > 1.0) {
             return ((percentage * multiplier()) >= actual);
@@ -111,15 +111,15 @@ public class Luck implements LuckContainer {
     }
 
     public void reset() {
-        setValue(defaultValue());
+        setValue(getDefaultValue());
     }
 
     @Override
-    public double baseValue() {
+    public double getValue() {
         return BASE_VALUE;
     }
 
-    public double defaultValue() {
+    public double getDefaultValue() {
         return player.getAttribute(Attribute.GENERIC_LUCK).getDefaultValue();
     }
 
@@ -130,39 +130,39 @@ public class Luck implements LuckContainer {
     }
 
     public void addTo(double value) {
-        if (value >= 1024.0 || (baseValue() + value) >= 1024.0) {
+        if (value >= 1024.0 || (getValue() + value) >= 1024.0) {
             setValue(1024.0);
             return;
         }
-        setValue(baseValue() + value);
+        setValue(getValue() + value);
     }
 
     public void takeFrom(double value) {
-        if (value <= -1024.0 || (baseValue() - value) <= -1024.0) {
+        if (value <= -1024.0 || (getValue() - value) <= -1024.0) {
             setValue(-1024.0);
             return;
         }
-        setValue(baseValue() + value);
+        setValue(getValue() + value);
     }
 
     public double getPercentage() {
-        return baseValue() - defaultValue();
+        return getValue() - getDefaultValue();
     }
 
     public boolean notDefault() {
-        return baseValue() != defaultValue();
+        return getValue() != getDefaultValue();
     }
 
     public boolean lessThan(double value) {
-        return baseValue() < value;
+        return getValue() < value;
     }
 
     public boolean greaterThan(double value) {
-        return baseValue() > value;
+        return getValue() > value;
     }
 
     @Override
     public String toString() {
-        return "" + baseValue();
+        return "" + getValue();
     }
 }

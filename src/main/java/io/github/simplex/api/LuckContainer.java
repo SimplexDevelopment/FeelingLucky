@@ -18,5 +18,5 @@ public interface LuckContainer extends Serializable {
 
     Player associatedPlayer();
 
-    double baseValue();
+    double getValue();
 }

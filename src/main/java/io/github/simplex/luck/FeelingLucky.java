@@ -1,9 +1,11 @@
 package io.github.simplex.luck;
 
 import io.github.simplex.luck.listener.PlayerListener;
+import io.github.simplex.luck.player.Luck;
 import io.github.simplex.luck.player.PlayerConfig;
 import io.github.simplex.luck.player.PlayerHandler;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -11,14 +13,18 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 public final class FeelingLucky extends JavaPlugin {
-    private static final Map<UUID, PlayerConfig> configMap = new HashMap<>();
+    private final Map<UUID, PlayerConfig> configMap = new HashMap<>();
+    private final Map<OfflinePlayer, Luck> offlinePlayerLuckMap = new HashMap<>();
     public LuckCMD cmd;
     public PlayerHandler handler;
     public PlayerListener playerListener;
 
-    public static Map<UUID, PlayerConfig> getConfigMap() {
+    public static FeelingLucky plugin = getPlugin(FeelingLucky.class);
+
+    public Map<UUID, PlayerConfig> getConfigMap() {
         return configMap;
     }
 

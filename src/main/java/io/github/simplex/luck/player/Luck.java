@@ -1,7 +1,6 @@
 package io.github.simplex.luck.player;
 
 import io.github.simplex.api.LuckContainer;
-import io.github.simplex.luck.FeelingLucky;
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
@@ -11,6 +10,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SplittableRandom;
+
+import static io.github.simplex.luck.FeelingLucky.plugin;
 
 @SuppressWarnings("all")
 public class Luck implements LuckContainer {
@@ -125,7 +126,7 @@ public class Luck implements LuckContainer {
 
     public void setValue(double value) {
         player.getAttribute(Attribute.GENERIC_LUCK).setBaseValue(value);
-        FeelingLucky.getConfigMap().get(associatedPlayer().getUniqueId()).setLuck(value);
+        plugin.getConfigMap().get(associatedPlayer().getUniqueId()).setLuck(value);
         Bukkit.getPluginManager().callEvent(event);
     }
 

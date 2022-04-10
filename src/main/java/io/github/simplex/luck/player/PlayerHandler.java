@@ -30,11 +30,11 @@ public class PlayerHandler implements Listener {
     @EventHandler
     public void initializePlayer(PlayerLoginEvent event) {
         Player player = event.getPlayer();
-        PlayerConfig playerConfig = FeelingLucky.getConfigMap().get(player.getUniqueId());
+        PlayerConfig playerConfig = plugin.getConfigMap().get(player.getUniqueId());
 
         if (playerConfig == null) {
             playerConfig = new PlayerConfig(plugin, player);
-            FeelingLucky.getConfigMap().put(player.getUniqueId(), playerConfig);
+            plugin.getConfigMap().put(player.getUniqueId(), playerConfig);
         }
 
         String username = playerConfig.getConfig().getString("username");

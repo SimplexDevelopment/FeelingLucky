@@ -16,21 +16,45 @@ import java.util.SplittableRandom;
 public class Luck implements LuckContainer {
     private final Player player;
     private final double multiplier;
-    private final double BASE_VALUE;
     private final PlayerLuckChangeEvent event;
+    private final FeelingLucky plugin;
+    private final List<Player> markedPlayers = new ArrayList<>();
+    private double BASE_VALUE;
 
-    public Luck(Player player) {
-        this(player, 1.0);
+    public Luck(FeelingLucky plugin, Player player) {
+        this(plugin, player, 1.0);
     }
 
-    public Luck(Player player, double multiplier) {
+    public Luck(FeelingLucky plugin, Player player, double multiplier) {
         this.player = player;
         this.multiplier = multiplier;
-        BASE_VALUE = player.getAttribute(Attribute.GENERIC_LUCK).getDefaultValue();
+        this.plugin = plugin;
+        BASE_VALUE = plugin.getConfigMap().get(player.getUniqueId()).getConfig().getDouble("luck");
         event = new PlayerLuckChangeEvent(this);
     }
 
-    private final List<Player> markedPlayers = new ArrayList<>();
+    @Contract(pure = true,
+            value = "-> new")
+    public static @NotNull SplittableRandom RNG() {
+        return new SplittableRandom();
+    }
+
+    public static boolean quickRNGnoMultiplier(double percentage) {
+        double rng;
+        if (percentage >= 100.0) {
+            rng = 1024.0; // 100% chance to trigger, obviously;
+        } else {
+            rng = RNG().nextDouble(0.0, 1024.0);
+        }
+
+        double actual = Math.round((rng / 1024.0) * 100);
+
+        return (percentage >= actual);
+    }
+
+    public FeelingLucky getPlugin() {
+        return plugin;
+    }
 
     public void markPlayer(Player player) {
         markedPlayers.add(player);
@@ -42,25 +66,6 @@ public class Luck implements LuckContainer {
 
     public boolean isMarked(Player player) {
         return markedPlayers.contains(player);
-    }
-
-    @Contract(pure = true,
-            value = "-> new")
-    public static @NotNull SplittableRandom RNG() {
-        return new SplittableRandom();
-    }
-
-    public static boolean quickRNG2(double percentage) {
-        double rng;
-        if (percentage >= 100.0) {
-            rng = 1024.0; // 100% chance to trigger, obviously;
-        } else {
-            rng = RNG().nextDouble(0.0, 1024.0);
-        }
-
-        double actual = Math.round((rng / 1024.0) * 100);
-
-        return (percentage >= actual);
     }
 
     @Override
@@ -119,14 +124,15 @@ public class Luck implements LuckContainer {
         return BASE_VALUE;
     }
 
-    public double getDefaultValue() {
-        return player.getAttribute(Attribute.GENERIC_LUCK).getDefaultValue();
+    public void setValue(double value) {
+        BASE_VALUE = value;
+        player.getAttribute(Attribute.GENERIC_LUCK).setBaseValue(value);
+        plugin.getConfigMap().get(associatedPlayer().getUniqueId()).setLuck(value);
+        Bukkit.getPluginManager().callEvent(event);
     }
 
-    public void setValue(double value) {
-        player.getAttribute(Attribute.GENERIC_LUCK).setBaseValue(value);
-        FeelingLucky.getConfigMap().get(associatedPlayer().getUniqueId()).setLuck(value);
-        Bukkit.getPluginManager().callEvent(event);
+    public double getDefaultValue() {
+        return player.getAttribute(Attribute.GENERIC_LUCK).getDefaultValue();
     }
 
     public void addTo(double value) {

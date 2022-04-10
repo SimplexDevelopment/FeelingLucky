@@ -39,8 +39,13 @@ public class LuckCMD extends Command implements TabCompleter {
                     return true;
                 }
 
+                if (amount > 1024.0 || amount < -1024.0) {
+                    sender.sendMessage(Component.empty().content("Number must be between -1024.0 and 1024.0"));
+                    return true;
+                }
+
                 Luck luck = plugin.handler.getLuckContainer(player);
-                PlayerConfig config = FeelingLucky.getConfigMap().get(player.getUniqueId());
+                PlayerConfig config = plugin.getConfigMap().get(player.getUniqueId());
 
                 switch (args[0]) {
                     case "set" -> {
@@ -95,7 +100,7 @@ public class LuckCMD extends Command implements TabCompleter {
                     }
 
                     Luck luck = plugin.handler.getLuckContainer(player);
-                    PlayerConfig config = FeelingLucky.getConfigMap().get(player.getUniqueId());
+                    PlayerConfig config = plugin.getConfigMap().get(player.getUniqueId());
                     luck.reset();
                     plugin.handler.updatePlayer(player, luck);
                     config.setLuck(luck.getValue());

@@ -1,6 +1,6 @@
 package io.github.simplex.luck;
 
-import io.github.simplex.luck.listener.PlayerListener;
+import io.github.simplex.luck.listener.*;
 import io.github.simplex.luck.player.PlayerConfig;
 import io.github.simplex.luck.player.PlayerHandler;
 import org.bukkit.Bukkit;
@@ -13,22 +13,27 @@ import java.util.Map;
 import java.util.UUID;
 
 public final class FeelingLucky extends JavaPlugin {
-    private static final Map<UUID, PlayerConfig> configMap = new HashMap<>();
+    private final Map<UUID, PlayerConfig> configMap = new HashMap<>();
+
     public LuckCMD cmd;
     public PlayerHandler handler;
-    public PlayerListener playerListener;
 
-    public static Map<UUID, PlayerConfig> getConfigMap() {
+    public Map<UUID, PlayerConfig> getConfigMap() {
         return configMap;
     }
 
     @Override
     public void onEnable() {
-        Bukkit.getLogger().info("Initializing the PlayerHandler...");
+        getLogger().info("Initializing the PlayerHandler...");
         handler = new PlayerHandler(this);
-        Bukkit.getLogger().info("Initialization complete! Attempting to register the Listeners...");
-        playerListener = new PlayerListener(this);
-        Bukkit.getLogger().info("Registration complete! Attempting to load all player configuration files...");
+        getLogger().info("Initialization complete! Attempting to register the Listeners...");
+        new PlayerListener(this);
+        new BlockDrops(this);
+        new ItemDrops(this);
+        new TakeDamage(this);
+        new RestoreHunger(this);
+        new EnchantmentBoost(this);
+        getLogger().info("Registration complete! Attempting to load all player configuration files...");
 
         File[] files = getDataFolder().listFiles();
         if (files != null) {

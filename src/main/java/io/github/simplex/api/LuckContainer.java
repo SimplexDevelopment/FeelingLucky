@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import java.io.Serializable;
 
 public interface LuckContainer extends Serializable {
+
     Attribute asAttribute();
 
     double getNumber();

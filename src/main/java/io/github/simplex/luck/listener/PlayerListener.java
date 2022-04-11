@@ -2,6 +2,7 @@ package io.github.simplex.luck.listener;
 
 import io.github.simplex.luck.FeelingLucky;
 import io.github.simplex.luck.player.Luck;
+import io.github.simplex.luck.util.SpecialFootItem;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -26,9 +27,13 @@ public record PlayerListener(FeelingLucky plugin) implements Listener {
     public void rabbitFoot(PlayerInteractEvent event) {
         Action action = event.getAction();
         ItemStack foot = new ItemStack(Material.RABBIT_FOOT);
+        SpecialFootItem special = new SpecialFootItem();
         Player player = event.getPlayer();
         Luck luck = plugin.handler.getLuckContainer(player);
         if (action.isRightClick() && player.getInventory().getItemInMainHand().isSimilar(foot)) {
+            if (foot.getItemMeta().equals(special.meta()) || foot.equals(special.get())) {
+                luck.setMultiplier(luck.multiplier() + 1);
+            }
             double rng = Luck.RNG().nextDouble(2.0, 5.0);
             player.getInventory().remove(player.getInventory().getItemInMainHand());
             luck.addTo(rng);

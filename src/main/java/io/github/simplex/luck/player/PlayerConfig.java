@@ -1,7 +1,7 @@
 package io.github.simplex.luck.player;
 
 import io.github.simplex.luck.FeelingLucky;
-import io.github.simplex.luck.SneakyWorker;
+import io.github.simplex.luck.util.SneakyWorker;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -50,9 +50,6 @@ public class PlayerConfig {
             config.set("luck", plugin.handler.getLuckContainer(player).getDefaultValue());
             config.set("multiplier", "1.0");
             save();
-        } else if (!tempUsername.equalsIgnoreCase(player.getName())) {
-            config.set("username", player.getName());
-            save();
         }
     }
 
@@ -80,8 +77,18 @@ public class PlayerConfig {
         load();
     }
 
+    public void setUsername(String name) {
+        config.set("username", name);
+        save();
+    }
+
     public void setLuck(double luck) {
         config.set("luck", luck);
+        save();
+    }
+
+    public void setMultiplier(double multiplier) {
+        config.set("multiplier", multiplier);
         save();
     }
 

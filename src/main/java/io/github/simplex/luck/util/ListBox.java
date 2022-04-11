@@ -1,4 +1,4 @@
-package io.github.simplex.luck;
+package io.github.simplex.luck.util;
 
 import org.bukkit.Material;
 import org.bukkit.event.entity.EntityDamageEvent;

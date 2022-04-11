@@ -1,9 +1,8 @@
 package io.github.simplex.luck.listener;
 
 import io.github.simplex.luck.FeelingLucky;
-import io.github.simplex.luck.SneakyWorker;
+import io.github.simplex.luck.util.SneakyWorker;
 import io.github.simplex.luck.player.Luck;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

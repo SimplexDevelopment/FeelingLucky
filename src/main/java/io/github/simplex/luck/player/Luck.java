@@ -15,11 +15,11 @@ import java.util.SplittableRandom;
 @SuppressWarnings("all")
 public class Luck implements LuckContainer {
     private final Player player;
-    private final double multiplier;
     private final PlayerLuckChangeEvent event;
     private final FeelingLucky plugin;
     private final List<Player> markedPlayers = new ArrayList<>();
     private double BASE_VALUE;
+    private double multiplier;
 
     public Luck(FeelingLucky plugin, Player player) {
         this(plugin, player, 1.0);
@@ -130,6 +130,11 @@ public class Luck implements LuckContainer {
         player.getAttribute(Attribute.GENERIC_LUCK).setBaseValue(value);
         plugin.getConfigMap().get(associatedPlayer().getUniqueId()).setLuck(value);
         Bukkit.getPluginManager().callEvent(event);
+    }
+
+    public void setMultiplier(double multiplier) {
+        this.multiplier = multiplier;
+        plugin.getConfigMap().get(associatedPlayer().getUniqueId()).setMultiplier(multiplier);
     }
 
     public double getDefaultValue() {

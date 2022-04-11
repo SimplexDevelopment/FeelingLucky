@@ -1,4 +1,4 @@
-package io.github.simplex.luck;
+package io.github.simplex.luck.util;
 
 import io.github.simplex.luck.player.Luck;
 import org.bukkit.Bukkit;

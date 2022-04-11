@@ -1,6 +1,7 @@
-package io.github.simplex.luck;
+package io.github.simplex.luck.util;
 
 import io.github.simplex.lib.Messages;
+import io.github.simplex.luck.FeelingLucky;
 import io.github.simplex.luck.player.Luck;
 import io.github.simplex.luck.player.PlayerConfig;
 import net.kyori.adventure.text.Component;

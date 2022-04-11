@@ -3,6 +3,7 @@ package io.github.simplex.luck;
 import io.github.simplex.luck.listener.*;
 import io.github.simplex.luck.player.PlayerConfig;
 import io.github.simplex.luck.player.PlayerHandler;
+import io.github.simplex.luck.util.LuckCMD;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -33,6 +34,7 @@ public final class FeelingLucky extends JavaPlugin {
         new TakeDamage(this);
         new RestoreHunger(this);
         new EnchantmentBoost(this);
+        new ExpBoost(this);
         getLogger().info("Registration complete! Attempting to load all player configuration files...");
 
         File[] files = getDataFolder().listFiles();

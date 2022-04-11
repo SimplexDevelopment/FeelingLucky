@@ -2,9 +2,8 @@ package io.github.simplex.luck.listener;
 
 import io.github.simplex.lib.PotionEffectBuilder;
 import io.github.simplex.luck.FeelingLucky;
-import io.github.simplex.luck.ListBox;
+import io.github.simplex.luck.util.ListBox;
 import io.github.simplex.luck.player.Luck;
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemConsumeEvent;

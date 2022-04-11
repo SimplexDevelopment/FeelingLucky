@@ -114,6 +114,11 @@ public class LuckCMD extends Command implements TabCompleter {
         }
 
         if (args.length == 1) {
+            if (args[0].equalsIgnoreCase("reload") && sender.hasPermission("luck.admin")) {
+                plugin.getConfigMap().values().forEach(PlayerConfig::reload);
+                return true;
+            }
+
             if ((sender instanceof Player player) && player.hasPermission("luck.default")) {
                 if (args[0].equalsIgnoreCase("info")) {
                     Luck luck = plugin.handler.getLuckContainer(player);
@@ -127,7 +132,7 @@ public class LuckCMD extends Command implements TabCompleter {
             }
         }
 
-        return true;
+        return false;
     }
 
     @Override
@@ -153,6 +158,7 @@ public class LuckCMD extends Command implements TabCompleter {
             switch (args[0]) {
                 case "info":
                 case "reset":
+                case "reload":
                     return new ArrayList<>();
                 case "give":
                 case "take":

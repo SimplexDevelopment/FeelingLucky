@@ -30,6 +30,7 @@ public class Luck implements LuckContainer {
         this.multiplier = multiplier;
         this.plugin = plugin;
         BASE_VALUE = plugin.getConfigMap().get(player.getUniqueId()).getConfig().getDouble("luck");
+
         event = new PlayerLuckChangeEvent(this);
     }
 

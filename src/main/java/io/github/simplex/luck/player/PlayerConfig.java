@@ -75,6 +75,11 @@ public class PlayerConfig {
         SneakyWorker.sneakyTry(() -> config = YamlConfiguration.loadConfiguration(configFile));
     }
 
+    public void reload() {
+        save();
+        load();
+    }
+
     public void setLuck(double luck) {
         config.set("luck", luck);
         save();

@@ -3,6 +3,7 @@ package io.github.simplex.lib;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.ChatColor;
 import org.jetbrains.annotations.Contract;
 
 public class MiniComponent {
@@ -15,6 +16,21 @@ public class MiniComponent {
         return new MiniComponent(content);
     }
 
+    @Contract("_ -> new")
+    public static Component info(String content) {
+        return new MiniComponent(content).color(ChatColor.GREEN).send();
+    }
+
+    @Contract("_ -> new")
+    public static Component warn(String content) {
+        return new MiniComponent(content).color(ChatColor.YELLOW).decorate(TextDecoration.ITALIC).send();
+    }
+
+    @Contract("_ -> new")
+    public static Component err(String content) {
+        return new MiniComponent(content).color(ChatColor.RED).decorate(TextDecoration.BOLD).send();
+    }
+
     public MiniComponent(String content) {
         this.content = content;
     }
@@ -24,8 +40,8 @@ public class MiniComponent {
         return this;
     }
 
-    public MiniComponent color(TextColor color) {
-        this.color = color;
+    public MiniComponent color(ChatColor color) {
+        this.color = TextColor.color(color.asBungee().getColor().getRGB());
         return this;
     }
 

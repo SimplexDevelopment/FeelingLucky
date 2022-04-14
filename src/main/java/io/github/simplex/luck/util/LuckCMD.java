@@ -1,6 +1,7 @@
 package io.github.simplex.luck.util;
 
 import io.github.simplex.lib.Messages;
+import io.github.simplex.lib.MiniComponent;
 import io.github.simplex.luck.FeelingLucky;
 import io.github.simplex.luck.player.Luck;
 import io.github.simplex.luck.player.PlayerConfig;
@@ -36,12 +37,12 @@ public class LuckCMD extends Command implements TabCompleter {
                 double amount = Double.parseDouble(args[2]);
 
                 if (player == null) {
-                    sender.sendMessage(Component.empty().content("That player cannot be found."));
+                    sender.sendMessage(Messages.NO_PLAYER.get());
                     return true;
                 }
 
                 if (amount > 1024.0 || amount < -1024.0) {
-                    sender.sendMessage(Component.empty().content("Number must be between -1024.0 and 1024.0"));
+                    sender.sendMessage(Messages.OUT_OF_BOUNDS.get());
                     return true;
                 }
 
@@ -53,21 +54,21 @@ public class LuckCMD extends Command implements TabCompleter {
                         luck.setValue(amount);
                         plugin.handler.updatePlayer(player, luck);
                         config.setLuck(luck.getValue());
-                        sender.sendMessage(Component.empty().content("Successfully reset " + args[1] + "'s Luck stat."));
+                        sender.sendMessage(MiniComponent.info("Successfully reset " + args[1] + "'s Luck stat."));
                         return true;
                     }
                     case "give" -> {
                         luck.addTo(amount);
                         plugin.handler.updatePlayer(player, luck);
                         config.setLuck(luck.getValue());
-                        sender.sendMessage(Component.empty().content("Successfully reset " + args[1] + "'s Luck stat."));
+                        sender.sendMessage(MiniComponent.info("Successfully reset " + args[1] + "'s Luck stat."));
                         return true;
                     }
                     case "take" -> {
                         luck.takeFrom(amount);
                         plugin.handler.updatePlayer(player, luck);
                         config.setLuck(luck.getValue());
-                        sender.sendMessage(Component.empty().content("Successfully reset " + args[1] + "'s Luck stat."));
+                        sender.sendMessage(MiniComponent.info("Successfully reset " + args[1] + "'s Luck stat."));
                         return true;
                     }
                 }
@@ -83,12 +84,12 @@ public class LuckCMD extends Command implements TabCompleter {
                     Player player = Bukkit.getPlayer(args[1]);
 
                     if (player == null) {
-                        sender.sendMessage("That player cannot be found.");
+                        sender.sendMessage(Messages.NO_PLAYER.get());
                         return true;
                     }
 
                     Luck luck = plugin.handler.getLuckContainer(player);
-                    sender.sendMessage(Component.empty().content("Luck stat for " + args[1] + ": " + luck.getValue()));
+                    sender.sendMessage(MiniComponent.info("Luck stat for " + args[1] + ": " + luck.getValue()));
                     return true;
                 }
 
@@ -96,7 +97,7 @@ public class LuckCMD extends Command implements TabCompleter {
                     Player player = Bukkit.getPlayer(args[1]);
 
                     if (player == null) {
-                        sender.sendMessage(Component.empty().content("That player cannot be found."));
+                        sender.sendMessage(Messages.NO_PLAYER.get());
                         return true;
                     }
 
@@ -105,7 +106,7 @@ public class LuckCMD extends Command implements TabCompleter {
                     luck.reset();
                     plugin.handler.updatePlayer(player, luck);
                     config.setLuck(luck.getValue());
-                    sender.sendMessage(Component.empty().content("Successfully reset " + args[1] + "'s Luck stat."));
+                    sender.sendMessage(MiniComponent.info("Successfully reset " + args[1] + "'s Luck stat."));
                     return true;
                 }
             } else {
@@ -117,14 +118,14 @@ public class LuckCMD extends Command implements TabCompleter {
         if (args.length == 1) {
             if (args[0].equalsIgnoreCase("reload") && sender.hasPermission("luck.admin")) {
                 plugin.getConfigMap().values().forEach(PlayerConfig::reload);
+                sender.sendMessage(MiniComponent.info("Player configurations reloaded."));
                 return true;
             }
 
             if ((sender instanceof Player player) && player.hasPermission("luck.default")) {
                 if (args[0].equalsIgnoreCase("info")) {
                     Luck luck = plugin.handler.getLuckContainer(player);
-                    TextComponent c = Component.text("Your Luck: " + luck.getPercentage());
-                    player.sendMessage(c.color(TextColor.color(0, 255, 0)));
+                    player.sendMessage(MiniComponent.info("Your Luck: " + luck.getPercentage()));
                     return true;
                 }
             } else if (sender instanceof ConsoleCommandSender) {

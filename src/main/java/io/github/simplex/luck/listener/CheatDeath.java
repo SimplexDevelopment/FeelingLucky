@@ -17,7 +17,7 @@ public record CheatDeath(FeelingLucky plugin) implements Listener {
     @EventHandler
     public void cheatDeath(PlayerDeathEvent event) {
         Player player = event.getPlayer();
-        Luck luck = plugin.handler.getLuckContainer(player);
+        Luck luck = plugin.getHandler().getLuckContainer(player);
         double absorption = Math.round(Luck.RNG().nextDouble(5.0, 10.0));
         if (luck.quickRNG(luck.getPercentage())) {
             event.setCancelled(true);

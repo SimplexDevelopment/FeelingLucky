@@ -11,6 +11,10 @@ public class MiniComponent {
     private TextDecoration decoration = null;
     private TextColor color = null;
 
+    public MiniComponent(String content) {
+        this.content = content;
+    }
+
     @Contract("_ -> new")
     public static MiniComponent of(String content) {
         return new MiniComponent(content);
@@ -29,10 +33,6 @@ public class MiniComponent {
     @Contract("_ -> new")
     public static Component err(String content) {
         return new MiniComponent(content).color(ChatColor.RED).decorate(TextDecoration.BOLD).send();
-    }
-
-    public MiniComponent(String content) {
-        this.content = content;
     }
 
     public MiniComponent decorate(TextDecoration decoration) {

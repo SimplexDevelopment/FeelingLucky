@@ -26,6 +26,19 @@ public final class ItemBuilder {
         return new ItemBuilder(material);
     }
 
+    @Contract(pure = true)
+    public static boolean isTool(Material m) {
+        String name = m.getKey().getKey();
+
+        return m.equals(Material.SHEARS)
+                || name.endsWith("bow")
+                || name.endsWith("pickaxe")
+                || name.endsWith("axe")
+                || name.endsWith("sword")
+                || name.endsWith("shovel")
+                || name.endsWith("hoe");
+    }
+
     public ItemBuilder setName(String name) {
         meta.displayName(MiniComponent.of(name).send());
         return this;

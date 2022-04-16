@@ -16,8 +16,7 @@ import java.util.UUID;
 public final class FeelingLucky extends JavaPlugin {
     private final Map<UUID, PlayerConfig> configMap = new HashMap<>();
 
-    public LuckCMD cmd;
-    public PlayerHandler handler;
+    private PlayerHandler handler;
 
     public Map<UUID, PlayerConfig> getConfigMap() {
         return configMap;
@@ -32,7 +31,7 @@ public final class FeelingLucky extends JavaPlugin {
         getLogger().info("Registration complete! Attempting to load all player configuration files...");
         loadConfigurations();
         Bukkit.getLogger().info("Attempting to load the Luck command...");
-        cmd = new LuckCMD(this);
+        new LuckCMD(this);
         Bukkit.getLogger().info("Successfully loaded the Luck command!");
 
         Bukkit.getLogger().info("Successfully initialized!");
@@ -68,5 +67,10 @@ public final class FeelingLucky extends JavaPlugin {
         new ExpBoost(this);
         new CheatDeath(this);
         new BonemealFullCrop(this);
+        new UnbreakableTool(this);
+    }
+
+    public PlayerHandler getHandler() {
+        return handler;
     }
 }

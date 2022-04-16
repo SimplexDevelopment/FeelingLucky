@@ -2,7 +2,6 @@ package io.github.simplex.luck.listener;
 
 import io.github.simplex.luck.FeelingLucky;
 import io.github.simplex.luck.player.Luck;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -59,7 +58,7 @@ public class ItemDrops implements Listener {
         if (entityPlayerMap.get(entity.getUniqueId()) == null) return;
 
         Player player = entityPlayerMap.get(entity.getUniqueId());
-        Luck luck = plugin.handler.getLuckContainer(player);
+        Luck luck = plugin.getHandler().getLuckContainer(player);
         Item item = event.getItemDrop();
         ItemStack stack = item.getItemStack();
         int amount = stack.getAmount();

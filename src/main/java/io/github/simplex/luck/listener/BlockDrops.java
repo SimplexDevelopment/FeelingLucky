@@ -19,7 +19,7 @@ public record BlockDrops(FeelingLucky plugin) implements Listener {
     @EventHandler
     public void extraBlockDrops(BlockDropItemEvent event) {
         Player player = event.getPlayer();
-        Luck luck = plugin.handler.getLuckContainer(player);
+        Luck luck = plugin.getHandler().getLuckContainer(player);
         List<Item> items = event.getItems();
         if (luck.quickRNG(luck.getPercentage())) {
             items.forEach(SneakyWorker::move);

@@ -21,7 +21,7 @@ public record ExpBoost(FeelingLucky plugin) implements Listener {
         int math = (5 * n ^ 2) / (2 * n + 4);
         int rounded = Math.round(math);
         Player player = event.getPlayer();
-        Luck luck = plugin.handler.getLuckContainer(player);
+        Luck luck = plugin.getHandler().getLuckContainer(player);
         if (luck.quickRNG(luck.getPercentage())) {
             orb.setExperience(rounded);
         }

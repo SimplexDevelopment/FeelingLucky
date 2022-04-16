@@ -2,8 +2,8 @@ package io.github.simplex.luck.listener;
 
 import io.github.simplex.lib.PotionEffectBuilder;
 import io.github.simplex.luck.FeelingLucky;
-import io.github.simplex.luck.util.ListBox;
 import io.github.simplex.luck.player.Luck;
+import io.github.simplex.luck.util.ListBox;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
@@ -19,7 +19,7 @@ public record RestoreHunger(FeelingLucky plugin) implements Listener {
     @EventHandler
     public void restoreHunger(PlayerItemConsumeEvent event) {
         ItemStack item = event.getItem();
-        Luck luck = plugin.handler.getLuckContainer(event.getPlayer());
+        Luck luck = plugin.getHandler().getLuckContainer(event.getPlayer());
         PotionEffect effect = PotionEffectBuilder.newEffect().type(PotionEffectType.SATURATION).amplifier(2).duration(10).particles(false).create();
         if (luck.notDefault()) {
             double percentage = luck.getPercentage();

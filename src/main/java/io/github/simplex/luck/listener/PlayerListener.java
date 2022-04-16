@@ -29,7 +29,7 @@ public record PlayerListener(FeelingLucky plugin) implements Listener {
         ItemStack foot = new ItemStack(Material.RABBIT_FOOT);
         SpecialFootItem special = new SpecialFootItem();
         Player player = event.getPlayer();
-        Luck luck = plugin.handler.getLuckContainer(player);
+        Luck luck = plugin.getHandler().getLuckContainer(player);
         if (action.isRightClick() && player.getInventory().getItemInMainHand().isSimilar(foot)) {
             if (foot.getItemMeta().equals(special.meta()) || foot.equals(special.get())) {
                 luck.setMultiplier(luck.multiplier() + 1);
@@ -37,7 +37,7 @@ public record PlayerListener(FeelingLucky plugin) implements Listener {
             double rng = Luck.RNG().nextDouble(2.0, 5.0);
             player.getInventory().remove(player.getInventory().getItemInMainHand());
             luck.addTo(rng);
-            plugin.handler.updatePlayer(player, luck);
+            plugin.getHandler().updatePlayer(player, luck);
             player.sendMessage(Component.empty().content("Your luck has been increased by " + rng + " points."));
         }
     }
@@ -56,11 +56,11 @@ public record PlayerListener(FeelingLucky plugin) implements Listener {
             return;
         }
 
-        Luck luck = plugin.handler.getLuckContainer(player);
+        Luck luck = plugin.getHandler().getLuckContainer(player);
         if (cause.equals(EntityDamageEvent.DamageCause.MAGIC) || cause.equals(EntityDamageEvent.DamageCause.POISON)) {
             if (luck.quickRNG(33.0)) {
                 luck.takeFrom(5.0);
-                plugin.handler.updatePlayer(player, luck);
+                plugin.getHandler().updatePlayer(player, luck);
             }
         }
     }

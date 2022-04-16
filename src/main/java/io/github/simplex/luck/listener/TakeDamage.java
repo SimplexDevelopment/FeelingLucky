@@ -2,8 +2,8 @@ package io.github.simplex.luck.listener;
 
 import io.github.simplex.lib.PotionEffectBuilder;
 import io.github.simplex.luck.FeelingLucky;
-import io.github.simplex.luck.util.ListBox;
 import io.github.simplex.luck.player.Luck;
+import io.github.simplex.luck.util.ListBox;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -23,7 +23,7 @@ public record TakeDamage(FeelingLucky plugin) implements Listener {
             return;
         }
         Player player = (Player) event.getEntity();
-        Luck luck = plugin.handler.getLuckContainer(player);
+        Luck luck = plugin.getHandler().getLuckContainer(player);
         if (ListBox.acceptedCauses.contains(event.getCause())) {
             if (luck.notDefault()) {
                 double percentage = luck.getPercentage();

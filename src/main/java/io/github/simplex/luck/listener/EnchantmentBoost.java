@@ -22,7 +22,7 @@ public record EnchantmentBoost(FeelingLucky plugin) implements Listener {
         Map<Enchantment, Integer> enchMap = event.getEnchantsToAdd();
         List<Enchantment> enchList = enchMap.keySet().stream().toList();
         Player player = event.getEnchanter();
-        Luck luck = plugin.handler.getLuckContainer(player);
+        Luck luck = plugin.getHandler().getLuckContainer(player);
         if (luck.quickRNG(luck.getPercentage())) {
             Enchantment particular = enchList.get(Luck.RNG().nextInt(enchList.size()));
             int rng = Luck.RNG().nextInt(1, 5);

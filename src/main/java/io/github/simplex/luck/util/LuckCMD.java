@@ -5,11 +5,11 @@ import io.github.simplex.lib.MiniComponent;
 import io.github.simplex.luck.FeelingLucky;
 import io.github.simplex.luck.player.Luck;
 import io.github.simplex.luck.player.PlayerConfig;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
-import org.bukkit.command.*;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -46,27 +46,27 @@ public class LuckCMD extends Command implements TabCompleter {
                     return true;
                 }
 
-                Luck luck = plugin.handler.getLuckContainer(player);
+                Luck luck = plugin.getHandler().getLuckContainer(player);
                 PlayerConfig config = plugin.getConfigMap().get(player.getUniqueId());
 
                 switch (args[0]) {
                     case "set" -> {
                         luck.setValue(amount);
-                        plugin.handler.updatePlayer(player, luck);
+                        plugin.getHandler().updatePlayer(player, luck);
                         config.setLuck(luck.getValue());
                         sender.sendMessage(MiniComponent.info("Successfully reset " + args[1] + "'s Luck stat."));
                         return true;
                     }
                     case "give" -> {
                         luck.addTo(amount);
-                        plugin.handler.updatePlayer(player, luck);
+                        plugin.getHandler().updatePlayer(player, luck);
                         config.setLuck(luck.getValue());
                         sender.sendMessage(MiniComponent.info("Successfully reset " + args[1] + "'s Luck stat."));
                         return true;
                     }
                     case "take" -> {
                         luck.takeFrom(amount);
-                        plugin.handler.updatePlayer(player, luck);
+                        plugin.getHandler().updatePlayer(player, luck);
                         config.setLuck(luck.getValue());
                         sender.sendMessage(MiniComponent.info("Successfully reset " + args[1] + "'s Luck stat."));
                         return true;
@@ -88,7 +88,7 @@ public class LuckCMD extends Command implements TabCompleter {
                         return true;
                     }
 
-                    Luck luck = plugin.handler.getLuckContainer(player);
+                    Luck luck = plugin.getHandler().getLuckContainer(player);
                     sender.sendMessage(MiniComponent.info("Luck stat for " + args[1] + ": " + luck.getValue()));
                     return true;
                 }
@@ -101,10 +101,10 @@ public class LuckCMD extends Command implements TabCompleter {
                         return true;
                     }
 
-                    Luck luck = plugin.handler.getLuckContainer(player);
+                    Luck luck = plugin.getHandler().getLuckContainer(player);
                     PlayerConfig config = plugin.getConfigMap().get(player.getUniqueId());
                     luck.reset();
-                    plugin.handler.updatePlayer(player, luck);
+                    plugin.getHandler().updatePlayer(player, luck);
                     config.setLuck(luck.getValue());
                     sender.sendMessage(MiniComponent.info("Successfully reset " + args[1] + "'s Luck stat."));
                     return true;
@@ -124,7 +124,7 @@ public class LuckCMD extends Command implements TabCompleter {
 
             if ((sender instanceof Player player) && player.hasPermission("luck.default")) {
                 if (args[0].equalsIgnoreCase("info")) {
-                    Luck luck = plugin.handler.getLuckContainer(player);
+                    Luck luck = plugin.getHandler().getLuckContainer(player);
                     player.sendMessage(MiniComponent.info("Your Luck: " + luck.getPercentage()));
                     return true;
                 }

@@ -1,5 +1,6 @@
 package io.github.simplex.luck.listener;
 
+import io.github.simplex.lib.MiniComponent;
 import io.github.simplex.luck.FeelingLucky;
 import io.github.simplex.luck.player.Luck;
 import io.github.simplex.luck.util.SpecialFootItem;
@@ -7,6 +8,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Guardian;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Witch;
 import org.bukkit.event.EventHandler;
@@ -43,7 +45,7 @@ public record PlayerListener(FeelingLucky plugin) implements Listener {
     }
 
     @EventHandler
-    public void witchesBrew(EntityDamageByEntityEvent event) {
+    public void luckDecrease(EntityDamageByEntityEvent event) {
         Entity eTEMP = event.getDamager();
         Entity pTEMP = event.getEntity();
         EntityDamageEvent.DamageCause cause = event.getCause();
@@ -52,7 +54,7 @@ public record PlayerListener(FeelingLucky plugin) implements Listener {
             return;
         }
 
-        if (!(eTEMP instanceof Witch)) {
+        if (!(eTEMP instanceof Witch) || !(eTEMP instanceof Guardian)) {
             return;
         }
 
@@ -61,6 +63,7 @@ public record PlayerListener(FeelingLucky plugin) implements Listener {
             if (luck.quickRNG(33.0)) {
                 luck.takeFrom(5.0);
                 plugin.getHandler().updatePlayer(player, luck);
+                player.sendMessage(MiniComponent.warn("Your luck has been decreased by 5 points!"));
             }
         }
     }

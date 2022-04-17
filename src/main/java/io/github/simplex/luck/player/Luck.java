@@ -8,9 +8,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.SplittableRandom;
+import java.util.*;
 
 @SuppressWarnings("all")
 public class Luck implements LuckContainer {
@@ -18,8 +16,10 @@ public class Luck implements LuckContainer {
     private final PlayerLuckChangeEvent event;
     private final FeelingLucky plugin;
     private final List<Player> markedPlayers = new ArrayList<>();
+    private final Map<Player, Double> cache = new HashMap<>();
     private double BASE_VALUE;
     private double multiplier;
+    private double tempSave;
 
     public Luck(FeelingLucky plugin, Player player) {
         this(plugin, player, 1.0);
@@ -30,6 +30,7 @@ public class Luck implements LuckContainer {
         this.multiplier = multiplier;
         this.plugin = plugin;
         BASE_VALUE = plugin.getConfigMap().get(player.getUniqueId()).getConfig().getDouble("luck");
+        tempSave = BASE_VALUE;
 
         event = new PlayerLuckChangeEvent(this);
     }
@@ -135,6 +136,29 @@ public class Luck implements LuckContainer {
     public void setMultiplier(double multiplier) {
         this.multiplier = multiplier;
         plugin.getConfigMap().get(associatedPlayer().getUniqueId()).setMultiplier(multiplier);
+    }
+
+    public void cache() {
+        if (cache.containsKey(player)) {
+            cache.replace(player, getValue());
+            return;
+        }
+
+        cache.put(player, getValue());
+    }
+
+    public boolean cached(Player player) {
+        return cache.containsKey(player);
+    }
+
+    public void restore() {
+        if (!cache.containsKey(player)) {
+            plugin.getLogger().info("Nothing to restore!");
+            return;
+        }
+
+        setValue(cache.get(player));
+        cache.remove(player);
     }
 
     public double getDefaultValue() {

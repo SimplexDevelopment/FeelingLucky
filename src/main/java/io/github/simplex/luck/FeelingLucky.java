@@ -58,15 +58,16 @@ public final class FeelingLucky extends JavaPlugin {
     }
 
     private void registerListeners() {
-        new PlayerListener(this);
         new BlockDrops(this);
-        new ItemDrops(this);
-        new TakeDamage(this);
-        new RestoreHunger(this);
+        new BonemealFullCrop(this);
+        new CheatDeath(this);
         new EnchantmentBoost(this);
         new ExpBoost(this);
-        new CheatDeath(this);
-        new BonemealFullCrop(this);
+        new IllOmen(this);
+        new ItemDrops(this);
+        new PlayerListener(this);
+        new RestoreHunger(this);
+        new TakeDamage(this);
         new UnbreakableTool(this);
     }
 

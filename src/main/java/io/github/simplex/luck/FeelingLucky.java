@@ -3,6 +3,7 @@ package io.github.simplex.luck;
 import io.github.simplex.luck.listener.*;
 import io.github.simplex.luck.player.PlayerConfig;
 import io.github.simplex.luck.player.PlayerHandler;
+import io.github.simplex.luck.util.CooldownTimer;
 import io.github.simplex.luck.util.LuckCMD;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;

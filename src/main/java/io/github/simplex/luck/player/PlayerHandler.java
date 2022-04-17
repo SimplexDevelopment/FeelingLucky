@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,5 +52,10 @@ public class PlayerHandler implements Listener {
         container.setValue(luck);
 
         playerLuckMap.put(player, container);
+    }
+
+    @EventHandler
+    public void clearContainer(PlayerQuitEvent event) {
+        playerLuckMap.remove(event.getPlayer());
     }
 }

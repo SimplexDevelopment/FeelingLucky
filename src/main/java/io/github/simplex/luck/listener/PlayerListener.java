@@ -3,6 +3,7 @@ package io.github.simplex.luck.listener;
 import io.github.simplex.lib.MiniComponent;
 import io.github.simplex.luck.FeelingLucky;
 import io.github.simplex.luck.player.Luck;
+import io.github.simplex.luck.util.CooldownTimer;
 import io.github.simplex.luck.util.SpecialFootItem;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -19,9 +20,15 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-public record PlayerListener(FeelingLucky plugin) implements Listener {
+import java.util.Objects;
+
+public final class PlayerListener implements Listener {
+    private final FeelingLucky plugin;
+    private final CooldownTimer timer;
+
     public PlayerListener(FeelingLucky plugin) {
         this.plugin = plugin;
+        this.timer = new CooldownTimer();
         Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
@@ -32,15 +39,24 @@ public record PlayerListener(FeelingLucky plugin) implements Listener {
         SpecialFootItem special = new SpecialFootItem();
         Player player = event.getPlayer();
         Luck luck = plugin.getHandler().getLuckContainer(player);
+
+        if (timer.onCooldown(player)) {
+            player.sendMessage(MiniComponent.err("That feature can only be used once every 30 seconds."));
+            player.sendMessage(MiniComponent.info("You have " + timer.remaining(player) + " seconds remaining."));
+            return;
+        }
+
         if (action.isRightClick() && player.getInventory().getItemInMainHand().isSimilar(foot)) {
             if (foot.getItemMeta().equals(special.meta()) || foot.equals(special.get())) {
                 luck.setMultiplier(luck.multiplier() + 1);
+                player.sendMessage(MiniComponent.info("Your luck multiplier has increased by 1!"));
             }
             double rng = Luck.RNG().nextDouble(2.0, 5.0);
             player.getInventory().remove(player.getInventory().getItemInMainHand());
             luck.addTo(rng);
             plugin.getHandler().updatePlayer(player, luck);
-            player.sendMessage(Component.empty().content("Your luck has been increased by " + rng + " points."));
+            timer.setCooldown(player.getUniqueId(), System.currentTimeMillis());
+            player.sendMessage(MiniComponent.info("Your luck has been increased by " + rng + " points."));
         }
     }
 
@@ -67,4 +83,24 @@ public record PlayerListener(FeelingLucky plugin) implements Listener {
             }
         }
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null || obj.getClass() != this.getClass()) return false;
+        var that = (PlayerListener) obj;
+        return Objects.equals(this.plugin, that.plugin);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(plugin);
+    }
+
+    @Override
+    public String toString() {
+        return "PlayerListener[" +
+                "plugin=" + plugin + ']';
+    }
+
 }

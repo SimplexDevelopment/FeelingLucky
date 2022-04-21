@@ -70,6 +70,7 @@ public final class FeelingLucky extends JavaPlugin {
         new RestoreHunger(this);
         new TakeDamage(this);
         new UnbreakableTool(this);
+        new VillagerInventory(this);
     }
 
     public PlayerHandler getHandler() {

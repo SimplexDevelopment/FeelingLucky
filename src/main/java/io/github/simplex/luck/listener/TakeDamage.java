@@ -8,12 +8,11 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 
-public record TakeDamage(FeelingLucky plugin) implements Listener {
-    public TakeDamage {
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+public class TakeDamage extends AbstractListener {
+    public TakeDamage(FeelingLucky plugin) {
+        super(plugin);
     }
 
     @EventHandler
@@ -23,7 +22,7 @@ public record TakeDamage(FeelingLucky plugin) implements Listener {
             return;
         }
         Player player = (Player) event.getEntity();
-        Luck luck = plugin.getHandler().getLuckContainer(player);
+        Luck luck = getHandler().getLuckContainer(player);
         if (ListBox.acceptedCauses.contains(event.getCause())) {
             if (luck.notDefault()) {
                 double percentage = luck.getPercentage();
@@ -42,7 +41,7 @@ public record TakeDamage(FeelingLucky plugin) implements Listener {
                     return;
                 }
 
-                if (luck.quickRNG(percentage)) {
+                if (luck.quickRNG(percentage) && doesQualify("take_damage", percentage)) {
                     event.setCancelled(true);
                     player.damage(event.getDamage() / 2);
                     player.sendMessage(Component.empty().content("You got lucky and took less damage."));
@@ -67,7 +66,7 @@ public record TakeDamage(FeelingLucky plugin) implements Listener {
                     return;
                 }
 
-                if (luck.quickRNG(percentage)) {
+                if (luck.quickRNG(percentage) && doesQualify("take_damage", percentage)) {
                     event.setCancelled(true);
                     player.getActivePotionEffects().removeIf(p -> ListBox.potionEffects.contains(p.getType()));
                     player.setFireTicks(0);

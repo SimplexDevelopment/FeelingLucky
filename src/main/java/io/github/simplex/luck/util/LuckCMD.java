@@ -16,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class LuckCMD extends Command implements TabCompleter {
     private final FeelingLucky plugin;
@@ -33,6 +34,19 @@ public class LuckCMD extends Command implements TabCompleter {
 
         if (args.length == 3) {
             if ((sender instanceof ConsoleCommandSender) || sender.hasPermission("luck.admin")) {
+                if (args[0].equalsIgnoreCase("reload") && args[1].equalsIgnoreCase("-p")) {
+                    Player player = Bukkit.getPlayer(args[2]);
+                    if (player == null) {
+                        sender.sendMessage(Messages.NO_PLAYER.get());
+                        return true;
+                    }
+                    UUID uuid = player.getUniqueId();
+                    PlayerConfig config = plugin.getConfigMap().get(uuid);
+                    config.reload();
+                    sender.sendMessage(MiniComponent.info("Successfully reloaded " + player.getName() + "'s configuration file."));
+                    return true;
+                }
+
                 Player player = Bukkit.getPlayer(args[1]);
                 double amount = Double.parseDouble(args[2]);
 
@@ -80,6 +94,10 @@ public class LuckCMD extends Command implements TabCompleter {
 
         if (args.length == 2) {
             if ((sender instanceof ConsoleCommandSender) || sender.hasPermission("luck.admin")) {
+                if (args[0].equalsIgnoreCase("reload") && args[1].equalsIgnoreCase("-m")) {
+
+                }
+
                 if (args[0].equalsIgnoreCase("info")) {
                     Player player = Bukkit.getPlayer(args[1]);
 

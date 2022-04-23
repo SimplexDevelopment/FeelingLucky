@@ -6,22 +6,21 @@ import io.github.simplex.luck.util.SneakyWorker;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockDropItemEvent;
 
 import java.util.List;
 
-public record BlockDrops(FeelingLucky plugin) implements Listener {
-    public BlockDrops {
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+public final class BlockDrops extends AbstractListener {
+    public BlockDrops(FeelingLucky plugin) {
+        super(plugin);
     }
 
     @EventHandler
     public void extraBlockDrops(BlockDropItemEvent event) {
         Player player = event.getPlayer();
-        Luck luck = plugin.getHandler().getLuckContainer(player);
+        Luck luck = getHandler().getLuckContainer(player);
         List<Item> items = event.getItems();
-        if (luck.quickRNG(luck.getPercentage())) {
+        if (luck.quickRNG(luck.getPercentage()) && doesQualify("block_drops", luck.getPercentage())) {
             items.forEach(SneakyWorker::move);
         }
     }

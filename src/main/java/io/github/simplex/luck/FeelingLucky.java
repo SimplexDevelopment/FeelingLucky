@@ -3,10 +3,9 @@ package io.github.simplex.luck;
 import io.github.simplex.luck.listener.*;
 import io.github.simplex.luck.player.PlayerConfig;
 import io.github.simplex.luck.player.PlayerHandler;
-import io.github.simplex.luck.util.CooldownTimer;
 import io.github.simplex.luck.util.LuckCMD;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.Arrays;
@@ -18,6 +17,7 @@ public final class FeelingLucky extends JavaPlugin {
     private final Map<UUID, PlayerConfig> configMap = new HashMap<>();
 
     private PlayerHandler handler;
+    private Config config;
 
     public Map<UUID, PlayerConfig> getConfigMap() {
         return configMap;
@@ -30,21 +30,26 @@ public final class FeelingLucky extends JavaPlugin {
         getLogger().info("Initialization complete! Attempting to register the Listeners...");
         registerListeners();
         getLogger().info("Registration complete! Attempting to load all player configuration files...");
-        loadConfigurations();
-        Bukkit.getLogger().info("Attempting to load the Luck command...");
+        loadPlayerConfigurations();
+        getLogger().info("Attempting to load the main configuration...");
+        config = new Config(this);
+        getLogger().info("Main Config loaded successfully! Attempting to load the Luck command...");
         new LuckCMD(this);
-        Bukkit.getLogger().info("Successfully loaded the Luck command!");
+        getLogger().info("Successfully loaded the Luck command!");
 
-        Bukkit.getLogger().info("Successfully initialized!");
+        getLogger().info("Successfully initialized!");
     }
 
     @Override
     public void onDisable() {
-        Bukkit.getLogger().info("Saving all player configurations...");
+        getLogger().info("Saving all player configurations...");
         configMap.values().forEach(PlayerConfig::save);
+        getLogger().info("Complete! Saving the main config...");
+        config.save();
+        getLogger().info("Complete! Goodbye! :)");
     }
 
-    private void loadConfigurations() {
+    private void loadPlayerConfigurations() {
         File[] files = getDataFolder().listFiles();
         if (files != null) {
             Arrays.stream(files).forEach(file -> {
@@ -75,5 +80,11 @@ public final class FeelingLucky extends JavaPlugin {
 
     public PlayerHandler getHandler() {
         return handler;
+    }
+    
+    @Override
+    @NotNull
+    public Config getConfig() {
+        return config;
     }
 }

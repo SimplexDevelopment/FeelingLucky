@@ -10,14 +10,13 @@ import org.bukkit.block.data.Ageable;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-public record BonemealFullCrop(FeelingLucky plugin) implements Listener {
-    public BonemealFullCrop {
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+public final class BonemealFullCrop extends AbstractListener {
+    public BonemealFullCrop(FeelingLucky plugin) {
+        super(plugin);
     }
 
     @EventHandler
@@ -25,7 +24,7 @@ public record BonemealFullCrop(FeelingLucky plugin) implements Listener {
         Player player = event.getPlayer();
         Action action = event.getAction();
         ItemStack bonemeal = ItemBuilder.of(Material.BONE_MEAL).build();
-        Luck luck = plugin.getHandler().getLuckContainer(player);
+        Luck luck = getHandler().getLuckContainer(player);
 
         ItemStack handItem = event.getItem();
         if (handItem == null) return;
@@ -38,12 +37,12 @@ public record BonemealFullCrop(FeelingLucky plugin) implements Listener {
         if (action.isRightClick()
                 && handItem.isSimilar(bonemeal)
                 && (data instanceof Ageable crop)
-                && luck.quickRNG(luck.getPercentage())) {
+                && luck.quickRNG(luck.getPercentage())
+                && doesQualify("bonemeal", luck.getPercentage())) {
             crop.setAge(crop.getMaximumAge());
             data.merge(crop);
             block.setBlockData(data);
             player.sendMessage(MiniComponent.info("You got lucky and your crops grew to maturity."));
         }
     }
-
 }

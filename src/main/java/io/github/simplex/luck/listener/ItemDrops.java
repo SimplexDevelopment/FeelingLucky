@@ -7,8 +7,8 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -16,13 +16,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class ItemDrops implements Listener {
+public class ItemDrops extends AbstractListener {
     private final Map<UUID, Player> entityPlayerMap = new HashMap<>();
-    private final FeelingLucky plugin;
+    private boolean canAffect = false;
 
     public ItemDrops(FeelingLucky plugin) {
-        this.plugin = plugin;
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        super(plugin);
     }
 
     @EventHandler
@@ -39,16 +38,17 @@ public class ItemDrops implements Listener {
             return;
         }
 
-        if (entity instanceof Witch witch) {
-            if (Luck.quickRNGnoMultiplier(33.0)) {
-                Location location = witch.getLocation();
-                World world = location.getWorld();
-                Item item = world.dropItemNaturally(location, new ItemStack(Material.RABBIT_FOOT, 1));
-                new EntityDropItemEvent(witch, item).callEvent();
-            }
+        entityPlayerMap.put(entity.getUniqueId(), player);
+    }
+
+    @EventHandler
+    public void checkForDroppedItems(EntityDeathEvent event) {
+        if (event.getEntity() instanceof Player) {
+            canAffect = false;
+            return;
         }
 
-        entityPlayerMap.put(entity.getUniqueId(), player);
+        canAffect = event.getDrops().isEmpty();
     }
 
     @EventHandler
@@ -57,12 +57,14 @@ public class ItemDrops implements Listener {
 
         if (entityPlayerMap.get(entity.getUniqueId()) == null) return;
 
+        if (!canAffect) return;
+
         Player player = entityPlayerMap.get(entity.getUniqueId());
-        Luck luck = plugin.getHandler().getLuckContainer(player);
+        Luck luck = getHandler().getLuckContainer(player);
         Item item = event.getItemDrop();
         ItemStack stack = item.getItemStack();
         int amount = stack.getAmount();
-        if (luck.quickRNG(luck.getPercentage())) {
+        if (luck.quickRNG(luck.getPercentage()) && doesQualify("item_drops", luck.getPercentage())) {
             int rng = Luck.RNG().nextInt(2, 5);
             amount += rng;
             stack.setAmount(amount);

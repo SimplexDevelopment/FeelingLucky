@@ -6,12 +6,10 @@ import io.github.simplex.luck.player.Luck;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 
-public record ExpBoost(FeelingLucky plugin) implements Listener {
+public final class ExpBoost extends AbstractListener {
     public ExpBoost(FeelingLucky plugin) {
-        this.plugin = plugin;
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        super(plugin);
     }
 
     @EventHandler
@@ -22,7 +20,7 @@ public record ExpBoost(FeelingLucky plugin) implements Listener {
         int rounded = Math.round(math);
         Player player = event.getPlayer();
         Luck luck = plugin.getHandler().getLuckContainer(player);
-        if (luck.quickRNG(luck.getPercentage())) {
+        if (luck.quickRNG(luck.getPercentage()) && doesQualify("experience", luck.getPercentage())) {
             orb.setExperience(rounded);
         }
     }

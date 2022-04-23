@@ -15,14 +15,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class VillagerInventory implements Listener {
+public class VillagerInventory extends AbstractListener {
     private final SpecialFootItem foot = new SpecialFootItem();
     private final MerchantRecipe recipe = new MerchantRecipe(foot.get(), 0, 2, true);
 
-    private final FeelingLucky plugin;
-
     public VillagerInventory(FeelingLucky plugin) {
-        this.plugin = plugin;
+        super(plugin);
 
         recipe.setIngredients(Arrays.asList(
                 ItemBuilder.of(Material.EMERALD).build(),
@@ -32,8 +30,6 @@ public class VillagerInventory implements Listener {
         recipe.setPriceMultiplier(1.25F);
         recipe.setVillagerExperience(25);
         recipe.setSpecialPrice(4);
-
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     @EventHandler

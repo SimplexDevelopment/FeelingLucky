@@ -1,0 +1,26 @@
+# These entries are for the minimum amount of luck required for the event to actually trigger.
+# These work in addition to the RNG generator,
+#     meaning both the RNG and this condition must be met for the event to trigger.
+# These values must be in the form of doubles, as listed below.
+# The maximum amount of luck that can be attributed is 1024.0, and the minimum is -1024.0
+
+high_rarity_chance: 512
+medium_rarity_chance: 128
+low_rarity_chance: 64
+
+# The following entries are for the rarity level of each event trigger.
+# This will determine which rarity chance to use which ensures players
+# The following values are accepted: NONE, LOW, MED, HIGH
+#     - None implies that there is no rarity chance attributed to that feature.
+# These entries are case-sensitive.
+
+block_drops: LOW
+bonemeal: LOW
+cheat_death: MED
+enchanting: HIGH
+experience: HIGH
+item_drops: LOW
+random_effect: HIGH
+restore_hunger: MED
+take_damage: MED
+unbreakable: HIGH

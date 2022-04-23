@@ -5,23 +5,22 @@ import io.github.simplex.luck.FeelingLucky;
 import io.github.simplex.luck.player.Luck;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public record IllOmen(FeelingLucky plugin) implements Listener {
-    public IllOmen {
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+public class IllOmen extends AbstractListener {
+    public IllOmen(FeelingLucky plugin) {
+        super(plugin);
     }
 
     @EventHandler
     public void reconnectCheck(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         PotionEffectType type = PotionEffectType.BAD_OMEN;
-        Luck luck = plugin.getHandler().getLuckContainer(player);
+        Luck luck = getHandler().getLuckContainer(player);
 
         if (player.hasPotionEffect(type)) {
             luck.cache();

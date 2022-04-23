@@ -22,14 +22,12 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Objects;
 
-public final class PlayerListener implements Listener {
-    private final FeelingLucky plugin;
+public final class PlayerListener extends AbstractListener {
     private final CooldownTimer timer;
 
     public PlayerListener(FeelingLucky plugin) {
-        this.plugin = plugin;
+        super(plugin);
         this.timer = new CooldownTimer();
-        Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     @EventHandler
@@ -38,7 +36,7 @@ public final class PlayerListener implements Listener {
         ItemStack foot = new ItemStack(Material.RABBIT_FOOT);
         SpecialFootItem special = new SpecialFootItem();
         Player player = event.getPlayer();
-        Luck luck = plugin.getHandler().getLuckContainer(player);
+        Luck luck = getHandler().getLuckContainer(player);
 
         if (timer.onCooldown(player)) {
             player.sendMessage(MiniComponent.err("That feature can only be used once every 30 seconds."));

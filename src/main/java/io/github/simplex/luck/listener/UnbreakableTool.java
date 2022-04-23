@@ -6,15 +6,14 @@ import io.github.simplex.luck.FeelingLucky;
 import io.github.simplex.luck.player.Luck;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public record UnbreakableTool(FeelingLucky plugin) implements Listener {
-    public UnbreakableTool {
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+public class UnbreakableTool extends AbstractListener {
+    public UnbreakableTool(FeelingLucky plugin) {
+        super(plugin);
     }
 
     @EventHandler
@@ -27,8 +26,8 @@ public record UnbreakableTool(FeelingLucky plugin) implements Listener {
 
         if (ItemBuilder.isTool(stack.getType())) {
             if (event.getWhoClicked() instanceof Player player) {
-                Luck luck = plugin.getHandler().getLuckContainer(player);
-                if (luck.quickRNG(luck.getPercentage())) {
+                Luck luck = getHandler().getLuckContainer(player);
+                if (luck.quickRNG(luck.getPercentage()) && doesQualify("unbreakable", luck.getPercentage())) {
                     meta.setUnbreakable(true);
                     stack.setItemMeta(meta);
                     inventory.setResult(stack);

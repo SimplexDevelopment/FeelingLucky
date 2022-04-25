@@ -68,9 +68,11 @@ public final class FeelingLucky extends JavaPlugin {
 
     private void registerListeners() {
         try {
-            Class<?>[] listeners = SneakyWorker.getClasses("io.github.simplex.luck.listener");
+            Class<?>[] listeners = SneakyWorker.getClasses(AbstractListener.class.getPackage().getName());
             Arrays.stream(listeners).forEach(l -> {
                 if (AbstractListener.class.isAssignableFrom(l)) {
+                    if (l.equals(AbstractListener.class)) return;
+
                     SneakyWorker.sneakyTry(() -> l.getDeclaredConstructor(FeelingLucky.class).newInstance(this));
                 }
             });

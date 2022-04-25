@@ -95,7 +95,9 @@ public class LuckCMD extends Command implements TabCompleter {
         if (args.length == 2) {
             if ((sender instanceof ConsoleCommandSender) || sender.hasPermission("luck.admin")) {
                 if (args[0].equalsIgnoreCase("reload") && args[1].equalsIgnoreCase("-m")) {
-
+                    plugin.getConfig().reload();
+                    sender.sendMessage(MiniComponent.info("Configuration successfully reloaded."));
+                    return true;
                 }
 
                 if (args[0].equalsIgnoreCase("info")) {
@@ -163,23 +165,22 @@ public class LuckCMD extends Command implements TabCompleter {
         List<String> playerNames = new ArrayList<>() {{
             Bukkit.getOnlinePlayers().forEach(p -> add(p.getName()));
         }};
-        List<String> adminCommands = List.of("set", "reset", "give", "take");
+        List<String> adminCommands = List.of("set", "reset", "give", "take", "reload");
 
         if ((sender instanceof ConsoleCommandSender) || sender.hasPermission("luck.admin")) {
             completions.addAll(adminCommands);
-            return completions;
+            return completions.stream().filter(n -> n.startsWith(args[0])).toList();
         }
 
-        if (args[0].equalsIgnoreCase("info") && sender.hasPermission("luck.admin")) {
-            return playerNames;
-        }
-
-        if (completions.contains(args[1]) && sender.hasPermission("luck.admin")) {
+        if (adminCommands.contains(args[0])
+                && sender.hasPermission("luck.admin")
+                && (args.length == 2)) {
             switch (args[0]) {
                 case "info":
                 case "reset":
+                    return playerNames.stream().filter(n -> n.startsWith(args[1])).toList();
                 case "reload":
-                    return new ArrayList<>();
+                    return List.of("-m", "-p");
                 case "give":
                 case "take":
                 case "set":
@@ -187,6 +188,12 @@ public class LuckCMD extends Command implements TabCompleter {
             }
         }
 
-        return completions;
+        if (args[0].equalsIgnoreCase("reload")
+                && args[1].equalsIgnoreCase("-p")
+                && sender.hasPermission("luck.admin") && (args.length == 3)) {
+            return playerNames.stream().filter(n -> n.startsWith(args[2])).toList();
+        }
+
+        return completions.stream().filter(n -> n.startsWith(args[0])).toList();
     }
 }

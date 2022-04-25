@@ -5,12 +5,8 @@ import io.github.simplex.luck.FeelingLucky;
 import io.github.simplex.luck.player.PlayerHandler;
 import org.bukkit.event.Listener;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public abstract class AbstractListener implements Listener {
     protected final FeelingLucky plugin;
-    protected final Map<AbstractListener, Rarity> listenerRarityMap = new HashMap<>();
     protected final Config config;
 
     public AbstractListener(FeelingLucky plugin) {
@@ -23,24 +19,19 @@ public abstract class AbstractListener implements Listener {
         return plugin.getHandler();
     }
 
+    public boolean doesQualify(String name, double luck) {
+        return switch (config.getRarity(name)) {
+            case HIGH -> luck > config.getChance("high_rarity_chance");
+            case MED -> luck > config.getChance("medium_rarity_chance");
+            case LOW -> luck > config.getChance("low_rarity_chance");
+            case NONE -> true;
+        };
+    }
+
     public enum Rarity {
         HIGH,
         MED,
         LOW,
         NONE
-    }
-
-    public boolean doesQualify(String name, double luck) {
-        switch (config.getRarity(name)) {
-            case HIGH:
-                if (luck < config.getChance("high_rarity_chance")) return false;
-            case MED:
-                if (luck < config.getChance("medium_rarity_chance")) return false;
-            case LOW:
-                if (luck < config.getChance("low_rarity_chance")) return false;
-            case NONE:
-                return true;
-        }
-        throw new IllegalArgumentException("The value for the listener rarity is not a recognized rarity value.");
     }
 }

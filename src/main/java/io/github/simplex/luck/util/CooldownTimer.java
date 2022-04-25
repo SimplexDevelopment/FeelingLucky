@@ -1,7 +1,5 @@
 package io.github.simplex.luck.util;
 
-import io.github.simplex.lib.MiniComponent;
-import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -10,9 +8,8 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class CooldownTimer {
-    private final Map<UUID, Long> cooldowns = new HashMap<>();
-
     public static final long DEFAULT_COOLDOWN = 30L;
+    private final Map<UUID, Long> cooldowns = new HashMap<>();
 
     public void setCooldown(UUID playerUUID, long time) {
         if (time < 1) {

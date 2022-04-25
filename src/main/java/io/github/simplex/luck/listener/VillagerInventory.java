@@ -7,7 +7,6 @@ import io.github.simplex.luck.util.SpecialFootItem;
 import org.bukkit.Material;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.inventory.MerchantRecipe;
 

@@ -4,9 +4,9 @@
 # These values must be in the form of doubles, as listed below.
 # The maximum amount of luck that can be attributed is 1024.0, and the minimum is -1024.0
 
-high_rarity_chance: 512
-medium_rarity_chance: 128
-low_rarity_chance: 64
+high_rarity_chance: 512.0
+medium_rarity_chance: 128.0
+low_rarity_chance: 64.0
 
 # The following entries are for the rarity level of each event trigger.
 # This will determine which rarity chance to use which ensures players

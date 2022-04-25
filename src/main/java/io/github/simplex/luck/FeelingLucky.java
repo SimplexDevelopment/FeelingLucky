@@ -81,7 +81,7 @@ public final class FeelingLucky extends JavaPlugin {
     public PlayerHandler getHandler() {
         return handler;
     }
-    
+
     @Override
     @NotNull
     public Config getConfig() {

@@ -15,12 +15,12 @@ low_rarity_chance: 64.0
 # These entries are case-sensitive.
 
 block_drops: LOW
-bonemeal: LOW
+bonemeal: MED
 cheat_death: MED
 enchanting: HIGH
 experience: HIGH
 item_drops: LOW
 random_effect: HIGH
-restore_hunger: MED
+restore_hunger: NONE
 take_damage: MED
 unbreakable: HIGH

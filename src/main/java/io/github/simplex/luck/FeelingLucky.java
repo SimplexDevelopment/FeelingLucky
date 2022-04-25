@@ -4,10 +4,13 @@ import io.github.simplex.luck.listener.*;
 import io.github.simplex.luck.player.PlayerConfig;
 import io.github.simplex.luck.player.PlayerHandler;
 import io.github.simplex.luck.util.LuckCMD;
+import io.github.simplex.luck.util.SneakyWorker;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -64,18 +67,16 @@ public final class FeelingLucky extends JavaPlugin {
     }
 
     private void registerListeners() {
-        new BlockDrops(this);
-        new BonemealFullCrop(this);
-        new CheatDeath(this);
-        new EnchantmentBoost(this);
-        new ExpBoost(this);
-        new IllOmen(this);
-        new ItemDrops(this);
-        new PlayerListener(this);
-        new RestoreHunger(this);
-        new TakeDamage(this);
-        new UnbreakableTool(this);
-        new VillagerInventory(this);
+        try {
+            Class<?>[] listeners = SneakyWorker.getClasses("io.github.simplex.luck.listener");
+            Arrays.stream(listeners).forEach(l -> {
+                if (AbstractListener.class.isAssignableFrom(l)) {
+                    SneakyWorker.sneakyTry(() -> l.getDeclaredConstructor(FeelingLucky.class).newInstance(this));
+                }
+            });
+        } catch (IOException | ClassNotFoundException ex) {
+            getLogger().severe(ex.getMessage());
+        }
     }
 
     public PlayerHandler getHandler() {

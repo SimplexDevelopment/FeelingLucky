@@ -6,6 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ListBox {
@@ -34,6 +35,25 @@ public class ListBox {
         add(PotionEffectType.BAD_OMEN);
         add(PotionEffectType.CONFUSION);
         add(PotionEffectType.WEAKNESS);
+    }};
+
+    public static final List<PotionEffectType> positiveEffects = new ArrayList<>() {{
+        add(PotionEffectType.DAMAGE_RESISTANCE);
+        add(PotionEffectType.DOLPHINS_GRACE);
+        add(PotionEffectType.INCREASE_DAMAGE);
+        add(PotionEffectType.ABSORPTION);
+        add(PotionEffectType.SATURATION);
+        add(PotionEffectType.FIRE_RESISTANCE);
+        add(PotionEffectType.WATER_BREATHING);
+        add(PotionEffectType.SPEED);
+        add(PotionEffectType.SLOW_FALLING);
+        add(PotionEffectType.REGENERATION);
+        add(PotionEffectType.NIGHT_VISION);
+        add(PotionEffectType.LUCK);
+        add(PotionEffectType.JUMP);
+        add(PotionEffectType.INVISIBILITY);
+        add(PotionEffectType.HEALTH_BOOST);
+        add(PotionEffectType.FAST_DIGGING);
     }};
 
     public static final List<ItemStack> foods = new ArrayList<>() {{

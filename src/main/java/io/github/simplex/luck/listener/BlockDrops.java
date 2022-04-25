@@ -21,7 +21,8 @@ public final class BlockDrops extends AbstractListener {
         Luck luck = getHandler().getLuckContainer(player);
         List<Item> items = event.getItems();
         if (luck.quickRNG(luck.getPercentage()) && doesQualify("block_drops", luck.getPercentage())) {
-            items.forEach(SneakyWorker::move);
+            event.getItems().clear();
+            event.getItems().addAll(items.stream().map(SneakyWorker::move).toList());
         }
     }
 }

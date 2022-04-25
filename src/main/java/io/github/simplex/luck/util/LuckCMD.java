@@ -162,9 +162,7 @@ public class LuckCMD extends Command implements TabCompleter {
         List<String> completions = new ArrayList<>() {{
             add("info");
         }};
-        List<String> playerNames = new ArrayList<>() {{
-            Bukkit.getOnlinePlayers().forEach(p -> add(p.getName()));
-        }};
+        List<String> playerNames = Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
         List<String> adminCommands = List.of("set", "reset", "give", "take", "reload");
 
         if ((sender instanceof ConsoleCommandSender) || sender.hasPermission("luck.admin")) {
@@ -173,18 +171,24 @@ public class LuckCMD extends Command implements TabCompleter {
         }
 
         if (adminCommands.contains(args[0])
-                && sender.hasPermission("luck.admin")
-                && (args.length == 2)) {
-            switch (args[0]) {
-                case "info":
-                case "reset":
-                    return playerNames.stream().filter(n -> n.startsWith(args[1])).toList();
-                case "reload":
-                    return List.of("-m", "-p");
-                case "give":
-                case "take":
-                case "set":
-                    return List.of("amount");
+                && sender.hasPermission("luck.admin")) {
+            if (args.length == 2) {
+                switch (args[0]) {
+                    case "info":
+                    case "reset":
+                        return playerNames.stream().filter(n -> n.startsWith(args[1])).toList();
+                    case "reload":
+                        return List.of("-m", "-p");
+                }
+            }
+
+            if (args.length == 3 && playerNames.contains(args[1])) {
+                switch (args[0]) {
+                    case "give":
+                    case "take":
+                    case "set":
+                        return List.of("amount");
+                }
             }
         }
 

@@ -5,12 +5,12 @@ import io.github.simplex.luck.player.PlayerConfig;
 import io.github.simplex.luck.player.PlayerHandler;
 import io.github.simplex.luck.util.LuckCMD;
 import io.github.simplex.luck.util.SneakyWorker;
+import io.github.simplex.metrics.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +28,9 @@ public final class FeelingLucky extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        getLogger().info("Initializing the PlayerHandler...");
+        getLogger().info("Initializing metrics...");
+        new Metrics(this, 15054);
+        getLogger().info("Metrics loaded. Initializing the PlayerHandler...");
         handler = new PlayerHandler(this);
         getLogger().info("Initialization complete! Attempting to register the Listeners...");
         registerListeners();

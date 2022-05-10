@@ -6,11 +6,9 @@ import io.github.simplex.luck.FeelingLucky;
 import io.github.simplex.luck.player.Luck;
 import io.github.simplex.luck.player.PlayerConfig;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.command.TabCompleter;
+import org.bukkit.command.*;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,14 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class LuckCMD extends Command implements TabCompleter {
+public class LuckCMD extends Command implements TabCompleter, PluginIdentifiableCommand {
     private final FeelingLucky plugin;
 
     public LuckCMD(FeelingLucky plugin) {
         super("luck", "FeelingLucky main command.", "/<command> <info | set | reset | give | take> [player] [amount]", List.of());
         this.plugin = plugin;
         setPermission("luck.default");
-        plugin.getServer().getCommandMap().register("luck", "FeelingLucky", this);
+        register(plugin.getServer().getCommandMap());
     }
 
     @Override
@@ -199,5 +197,10 @@ public class LuckCMD extends Command implements TabCompleter {
         }
 
         return completions.stream().filter(n -> n.startsWith(args[0])).toList();
+    }
+
+    @Override
+    public @NotNull FeelingLucky getPlugin() {
+        return plugin;
     }
 }

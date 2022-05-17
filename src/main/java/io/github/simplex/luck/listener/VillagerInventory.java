@@ -15,11 +15,13 @@ import java.util.Arrays;
 import java.util.List;
 
 public class VillagerInventory extends AbstractListener {
-    private final SpecialFootItem foot = new SpecialFootItem();
-    private final MerchantRecipe recipe = new MerchantRecipe(foot.get(), 0, 2, true);
+    private final MerchantRecipe recipe;
 
     public VillagerInventory(FeelingLucky plugin) {
         super(plugin);
+
+        SpecialFootItem foot = plugin.getFoot();
+        this.recipe = new MerchantRecipe(foot.get(), 0, 2, true);
 
         recipe.setIngredients(Arrays.asList(
                 ItemBuilder.of(Material.EMERALD).build(),

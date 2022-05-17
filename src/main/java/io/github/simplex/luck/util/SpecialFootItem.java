@@ -12,7 +12,7 @@ public class SpecialFootItem {
         stack = ItemBuilder.of(Material.RABBIT_FOOT)
                 .setName("Enhanced Rabbit Foot")
                 .setAmount(1).setLore("A strange energy radiates from within.",
-                        "This item will increase your luck multiplier by one.")
+                        "This item will increase your luck multiplier by 0.1.")
                 .build();
     }
 

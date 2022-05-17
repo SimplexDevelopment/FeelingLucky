@@ -31,7 +31,7 @@ public final class PlayerListener extends AbstractListener {
     public void rabbitFoot(PlayerInteractEvent event) {
         Action action = event.getAction();
         ItemStack foot = new ItemStack(Material.RABBIT_FOOT);
-        SpecialFootItem special = new SpecialFootItem();
+        SpecialFootItem special = plugin.getFoot();
         Player player = event.getPlayer();
         Luck luck = getHandler().getLuckContainer(player);
 
@@ -41,10 +41,10 @@ public final class PlayerListener extends AbstractListener {
             return;
         }
 
-        if (action.isRightClick() && player.getInventory().getItemInMainHand().isSimilar(foot)) {
+        if (action.isRightClick() && player.getInventory().getItemInMainHand().getType().equals(foot.getType())) {
             if (foot.getItemMeta().equals(special.meta()) || foot.equals(special.get())) {
-                luck.setMultiplier(luck.multiplier() + 1);
-                player.sendMessage(MiniComponent.info("Your luck multiplier has increased by 1!"));
+                luck.setMultiplier(luck.multiplier() + 0.1);
+                player.sendMessage(MiniComponent.info("Your luck multiplier has increased by 0.1!"));
             }
             double rng = Luck.RNG().nextDouble(2.0, 5.0);
             player.getInventory().remove(player.getInventory().getItemInMainHand());
@@ -78,24 +78,4 @@ public final class PlayerListener extends AbstractListener {
             }
         }
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (PlayerListener) obj;
-        return Objects.equals(this.plugin, that.plugin);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(plugin);
-    }
-
-    @Override
-    public String toString() {
-        return "PlayerListener[" +
-                "plugin=" + plugin + ']';
-    }
-
 }

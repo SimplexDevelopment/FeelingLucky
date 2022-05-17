@@ -5,6 +5,7 @@ import io.github.simplex.luck.player.PlayerConfig;
 import io.github.simplex.luck.player.PlayerHandler;
 import io.github.simplex.luck.util.LuckCMD;
 import io.github.simplex.luck.util.SneakyWorker;
+import io.github.simplex.luck.util.SpecialFootItem;
 import io.github.simplex.metrics.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -19,6 +20,7 @@ import java.util.UUID;
 public final class FeelingLucky extends JavaPlugin {
     private final Map<UUID, PlayerConfig> configMap = new HashMap<>();
     private final File playerDirectory = new File(getDataFolder(), "players");
+    private final SpecialFootItem specialFootItem = new SpecialFootItem();
 
     private PlayerHandler handler;
     private Config config;
@@ -96,5 +98,9 @@ public final class FeelingLucky extends JavaPlugin {
     @NotNull
     public Config getConfig() {
         return config;
+    }
+
+    public SpecialFootItem getFoot() {
+        return specialFootItem;
     }
 }

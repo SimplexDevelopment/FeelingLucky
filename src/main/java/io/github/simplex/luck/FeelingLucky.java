@@ -18,6 +18,7 @@ import java.util.UUID;
 
 public final class FeelingLucky extends JavaPlugin {
     private final Map<UUID, PlayerConfig> configMap = new HashMap<>();
+    private final File playerDirectory = new File(getDataFolder(), "players");
 
     private PlayerHandler handler;
     private Config config;
@@ -55,7 +56,11 @@ public final class FeelingLucky extends JavaPlugin {
     }
 
     private void loadPlayerConfigurations() {
-        File[] files = getDataFolder().listFiles();
+        if (!playerDirectory.exists()) {
+            playerDirectory.mkdirs();
+        }
+
+        File[] files = playerDirectory.listFiles();
         if (files != null) {
             Arrays.stream(files).forEach(file -> {
                 UUID uuid = UUID.fromString(file.getName().split("\\.")[0]);

@@ -64,7 +64,7 @@ public class PlayerConfig {
     }
 
     @Contract("_, _ -> new")
-    public static PlayerConfig loadFrom(FeelingLucky plugin, File file) {
+    public static PlayerConfig initFrom(FeelingLucky plugin, File file) {
         return new PlayerConfig(plugin, file);
     }
 

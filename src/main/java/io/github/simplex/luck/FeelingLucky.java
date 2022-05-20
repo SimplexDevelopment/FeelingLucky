@@ -59,14 +59,17 @@ public final class FeelingLucky extends JavaPlugin {
 
     private void loadPlayerConfigurations() {
         if (!playerDirectory.exists()) {
+            getLogger().info("No directory exists. Creating...");
             playerDirectory.mkdirs();
+            getLogger().info("Created new directory \"FeelingLucky/players\".");
+            return;
         }
 
         File[] files = playerDirectory.listFiles();
         if (files != null) {
             Arrays.stream(files).forEach(file -> {
                 UUID uuid = UUID.fromString(file.getName().split("\\.")[0]);
-                configMap.put(uuid, PlayerConfig.loadFrom(this, file));
+                configMap.put(uuid, PlayerConfig.initFrom(this, file));
             });
             configMap.forEach((u, pc) -> pc.load());
             getLogger().info("Successfully loaded all configurations!");

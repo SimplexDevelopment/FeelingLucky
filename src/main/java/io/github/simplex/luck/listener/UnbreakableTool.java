@@ -27,7 +27,7 @@ public class UnbreakableTool extends AbstractListener {
         if (ItemBuilder.isTool(stack.getType())) {
             if (event.getWhoClicked() instanceof Player player) {
                 Luck luck = getHandler().getLuckContainer(player);
-                if (luck.quickRNG(luck.getPercentage()) && doesQualify("unbreakable", luck.getPercentage())) {
+                if (luck.quickRNG(luck.getValue()) && doesQualify("unbreakable", luck.getValue())) {
                     meta.setUnbreakable(true);
                     stack.setItemMeta(meta);
                     inventory.setResult(stack);

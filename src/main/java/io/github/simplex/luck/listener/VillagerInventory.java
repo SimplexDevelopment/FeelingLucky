@@ -44,7 +44,7 @@ public class VillagerInventory extends AbstractListener {
             Luck luck = plugin.getHandler().getLuckContainer(event.getPlayer());
             if (luck == null) return;
 
-            if (luck.quickRNG(luck.getPercentage())) {
+            if (luck.quickRNG(luck.getValue())) {
                 recipeList.add(recipe);
                 vil.setRecipes(recipeList);
             }

@@ -17,7 +17,7 @@ public final class CheatDeath extends AbstractListener {
         Player player = event.getPlayer();
         Luck luck = getHandler().getLuckContainer(player);
         double absorption = Math.round(Luck.RNG().nextDouble(5.0, 10.0));
-        if (luck.quickRNG(luck.getPercentage()) && doesQualify("cheat_death", luck.getPercentage())) {
+        if (luck.quickRNG(luck.getValue()) && doesQualify("cheat_death", luck.getValue())) {
             event.setCancelled(true);
             player.setHealth(1.0);
             player.setAbsorptionAmount(absorption);

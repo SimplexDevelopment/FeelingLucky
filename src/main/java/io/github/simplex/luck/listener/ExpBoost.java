@@ -20,7 +20,7 @@ public final class ExpBoost extends AbstractListener {
         int rounded = Math.round(math);
         Player player = event.getPlayer();
         Luck luck = plugin.getHandler().getLuckContainer(player);
-        if (luck.quickRNG(luck.getPercentage()) && doesQualify("experience", luck.getPercentage())) {
+        if (luck.quickRNG(luck.getValue()) && doesQualify("experience", luck.getValue())) {
             orb.setExperience(rounded);
         }
     }

@@ -8,7 +8,6 @@ import io.github.simplex.luck.player.PlayerConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -143,7 +142,7 @@ public class LuckCMD extends Command implements TabCompleter, PluginIdentifiable
             if ((sender instanceof Player player) && player.hasPermission("luck.default")) {
                 if (args[0].equalsIgnoreCase("info")) {
                     Luck luck = plugin.getHandler().getLuckContainer(player);
-                    player.sendMessage(MiniComponent.info("Your Luck: " + luck.getPercentage()));
+                    player.sendMessage(MiniComponent.info("Your Luck: " + luck.getValue()));
                     return true;
                 }
             } else if (sender instanceof ConsoleCommandSender) {

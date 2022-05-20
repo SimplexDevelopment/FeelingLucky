@@ -26,7 +26,7 @@ public class RandomEffect extends AbstractListener {
         int size = effectList.size();
         PotionEffect random = effectList.get(Luck.RNG().nextInt(size - 1));
 
-        if (luck.quickRNG(luck.getPercentage()) && doesQualify("random_effect", luck.getValue())) {
+        if (luck.quickRNG(luck.getValue()) && doesQualify("random_effect", luck.getValue())) {
             player.addPotionEffect(random);
             player.sendMessage(MiniComponent.info("Thanks to luck, a random positive potion effect has been applied to you."));
         }
@@ -41,7 +41,7 @@ public class RandomEffect extends AbstractListener {
         int size = effectList.size();
         PotionEffect random = effectList.get(Luck.RNG().nextInt(size - 1));
 
-        if (luck.quickRNG(luck.getPercentage()) && doesQualify("random_effect", luck.getValue())) {
+        if (luck.quickRNG(luck.getValue()) && doesQualify("random_effect", luck.getValue())) {
             player.addPotionEffect(random);
             player.sendMessage(MiniComponent.info("Thanks to luck, a random positive potion effect has been applied to you."));
         }

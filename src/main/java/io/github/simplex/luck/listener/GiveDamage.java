@@ -19,7 +19,7 @@ public class GiveDamage extends AbstractListener {
                 && (e.getEntity() instanceof LivingEntity)) {
             double nextDmg = e.getDamage() + Luck.RNG().nextDouble(1.0, 5.0);
             Luck luck = plugin.getHandler().getLuckContainer(player);
-            if (luck.quickRNG(luck.getPercentage())) {
+            if (luck.quickRNG(luck.getValue())) {
                 e.setDamage(nextDmg);
                 player.sendMessage(MiniComponent.info("Your luck has increased your damage output!"));
             }

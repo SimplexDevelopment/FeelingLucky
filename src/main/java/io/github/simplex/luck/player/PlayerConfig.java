@@ -29,7 +29,7 @@ public class PlayerConfig {
         File file = new File(dataFolder, player.getUniqueId() + ".yml");
         if (!file.exists()) {
             String name = "username: " + player.getName();
-            String luck = "luck: " + player.getAttribute(Attribute.GENERIC_LUCK).getDefaultValue();
+            String luck = "luck: " + 0;
             String multiplier = "multiplier: " + 1.0;
 
             SneakyWorker.sneakyTry(() -> {

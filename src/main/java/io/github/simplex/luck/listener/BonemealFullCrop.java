@@ -37,8 +37,8 @@ public final class BonemealFullCrop extends AbstractListener {
         if (action.isRightClick()
                 && handItem.isSimilar(bonemeal)
                 && (data instanceof Ageable crop)
-                && luck.quickRNG(luck.getPercentage())
-                && doesQualify("bonemeal", luck.getPercentage())) {
+                && luck.quickRNG(luck.getValue())
+                && doesQualify("bonemeal", luck.getValue())) {
             crop.setAge(crop.getMaximumAge());
             data.merge(crop);
             block.setBlockData(data);

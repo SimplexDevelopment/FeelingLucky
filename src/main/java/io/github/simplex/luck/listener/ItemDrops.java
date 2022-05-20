@@ -64,7 +64,7 @@ public class ItemDrops extends AbstractListener {
         Item item = event.getItemDrop();
         ItemStack stack = item.getItemStack();
         int amount = stack.getAmount();
-        if (luck.quickRNG(luck.getPercentage()) && doesQualify("item_drops", luck.getPercentage())) {
+        if (luck.quickRNG(luck.getValue()) && doesQualify("item_drops", luck.getValue())) {
             int rng = Luck.RNG().nextInt(2, 5);
             amount += rng;
             stack.setAmount(amount);

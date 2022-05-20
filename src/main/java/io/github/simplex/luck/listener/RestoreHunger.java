@@ -21,7 +21,7 @@ public class RestoreHunger extends AbstractListener {
         Luck luck = getHandler().getLuckContainer(event.getPlayer());
         PotionEffect effect = PotionEffectBuilder.newEffect().type(PotionEffectType.SATURATION).amplifier(2).duration(10).particles(false).create();
         if (luck.notDefault()) {
-            double percentage = luck.getPercentage();
+            double percentage = luck.getValue();
             ListBox.foods.forEach(food -> {
                 if (item.isSimilar(food)) {
                     if (luck.quickRNG(percentage) && doesQualify("restore_hunger", percentage)) {

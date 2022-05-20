@@ -21,7 +21,7 @@ public final class EnchantmentBoost extends AbstractListener {
         List<Enchantment> enchList = enchMap.keySet().stream().toList();
         Player player = event.getEnchanter();
         Luck luck = getHandler().getLuckContainer(player);
-        if (luck.quickRNG(luck.getPercentage()) && doesQualify("enchanting", luck.getPercentage())) {
+        if (luck.quickRNG(luck.getValue()) && doesQualify("enchanting", luck.getValue())) {
             Enchantment particular = enchList.get(Luck.RNG().nextInt(enchList.size()));
             int rng = Luck.RNG().nextInt(1, 5);
 

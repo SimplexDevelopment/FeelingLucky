@@ -25,7 +25,7 @@ public class TakeDamage extends AbstractListener {
         Luck luck = getHandler().getLuckContainer(player);
         if (ListBox.acceptedCauses.contains(event.getCause())) {
             if (luck.notDefault()) {
-                double percentage = luck.getPercentage();
+                double percentage = luck.getValue();
 
                 /*
                  * If a player's luck stat is a negative number, or they are "marked",
@@ -51,7 +51,7 @@ public class TakeDamage extends AbstractListener {
 
         if (ListBox.sideCauses.contains(event.getCause())) {
             if (luck.notDefault()) {
-                double percentage = luck.getPercentage();
+                double percentage = luck.getValue();
 
                 /*
                  * If a player's luck stat is a negative number, or they are "marked",

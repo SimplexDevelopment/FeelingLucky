@@ -3,7 +3,6 @@ package io.github.simplex.luck.player;
 import io.github.simplex.api.LuckContainer;
 import io.github.simplex.luck.FeelingLucky;
 import org.bukkit.Bukkit;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -41,9 +40,9 @@ public class Luck implements LuckContainer {
         return new SplittableRandom();
     }
 
-    public static boolean quickRNGnoMultiplier(double percentage) {
+    public static boolean quickRNGnoMultiplier(double value) {
         double rng;
-        if (percentage >= 100.0) {
+        if (value >= 1024.0) {
             rng = 1024.0; // 100% chance to trigger, obviously;
         } else {
             rng = RNG().nextDouble(0.0, 1024.0);
@@ -51,7 +50,7 @@ public class Luck implements LuckContainer {
 
         double actual = Math.round((rng / 1024.0) * 100);
 
-        return (percentage >= actual);
+        return (value >= actual);
     }
 
     public FeelingLucky getPlugin() {
@@ -71,23 +70,13 @@ public class Luck implements LuckContainer {
     }
 
     @Override
-    public Attribute asAttribute() {
-        return Attribute.GENERIC_LUCK;
-    }
-
-    @Override
-    public double getNumber() {
-        return associatedPlayer().getAttribute(asAttribute()).getValue();
-    }
-
-    @Override
     public boolean isMatch(double number) {
-        return getNumber() == number;
+        return getValue() == number;
     }
 
     @Override
     public boolean isClose(double number, int range) {
-        return ((getNumber() - range <= number) && (number <= getNumber() + range));
+        return ((getValue() - range <= number) && (number <= getValue() + range));
     }
 
     @Override
@@ -100,9 +89,9 @@ public class Luck implements LuckContainer {
         return player;
     }
 
-    public boolean quickRNG(double percentage) {
+    public boolean quickRNG(double value) {
         double rng;
-        if (percentage >= 100.0) {
+        if (value >= 1024.0) {
             rng = 1024.0; // 100% chance to trigger, obviously;
         } else {
             rng = RNG().nextDouble(0.0, 1024.0);
@@ -111,10 +100,10 @@ public class Luck implements LuckContainer {
         double actual = Math.round((rng / 1024) * 100);
 
         if (multiplier() > 1.0) {
-            return ((percentage * multiplier()) >= actual);
+            return ((value * multiplier()) >= actual);
         }
 
-        return (percentage >= actual);
+        return (value >= actual);
     }
 
     public void reset() {
@@ -128,7 +117,6 @@ public class Luck implements LuckContainer {
 
     public void setValue(double value) {
         BASE_VALUE = value;
-        player.getAttribute(Attribute.GENERIC_LUCK).setBaseValue(value);
         plugin.getConfigMap().get(associatedPlayer().getUniqueId()).setLuck(value);
         Bukkit.getPluginManager().callEvent(event);
     }
@@ -162,7 +150,7 @@ public class Luck implements LuckContainer {
     }
 
     public double getDefaultValue() {
-        return player.getAttribute(Attribute.GENERIC_LUCK).getDefaultValue();
+        return 0;
     }
 
     public void addTo(double value) {
@@ -179,10 +167,6 @@ public class Luck implements LuckContainer {
             return;
         }
         setValue(getValue() + value);
-    }
-
-    public double getPercentage() {
-        return getValue() - getDefaultValue();
     }
 
     public boolean notDefault() {

@@ -3,22 +3,16 @@ plugins {
 }
 
 group = 'io.github.simplex'
-version = 'Beta-1.0.2'
+version = 'Beta-1.1.0'
 
 repositories {
     mavenCentral()
-    maven {
-        name = 'papermc-repo'
-        url = 'https://papermc.io/repo/repository/maven-public/'
-    }
-    maven {
-        name = 'sonatype'
-        url = 'https://s01.oss.sonatype.org/content/groups/public/'
-    }
+    maven { url = uri("https://s01.oss.sonatype.org/content/groups/public/") }
+    maven { url = uri("https://papermc.io/repo/repository/maven-public/")}
 }
 
 dependencies {
-    compileOnly 'io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT'
+    compileOnly("io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT")
 }
 
 def targetJavaVersion = 17

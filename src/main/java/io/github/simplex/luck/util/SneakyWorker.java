@@ -1,6 +1,5 @@
 package io.github.simplex.luck.util;
 
-import io.github.simplex.luck.listener.AbstractListener;
 import io.github.simplex.luck.player.Luck;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Item;

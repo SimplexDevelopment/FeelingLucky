@@ -1,4 +1,4 @@
-# <center>FeelingLucky Beta v1.1.0</center>
+# <center>FeelingLucky Beta v1.0.2</center>
 
 ## <center><u><span style="color:blue">Plugin Description:</u></center>
 

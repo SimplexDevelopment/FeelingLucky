@@ -46,6 +46,6 @@ public class OreVein extends AbstractListener {
                 }
             }
         }
-        return streamBuilder.build();
+        return streamBuilder.build().filter(b -> b.getType().equals(block.getType()));
     }
 }

@@ -13,6 +13,7 @@ import org.bukkit.potion.PotionEffectType;
 public class RestoreHunger extends AbstractListener {
     public RestoreHunger(FeelingLucky plugin) {
         super(plugin);
+        register(this);
     }
 
     @EventHandler

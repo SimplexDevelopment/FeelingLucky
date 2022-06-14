@@ -19,7 +19,11 @@ bonemeal: MED
 cheat_death: MED
 enchanting: HIGH
 experience: HIGH
+give_damage: LOW
+hide_check: MED
 item_drops: LOW
+jump_boost: MED
+ore_vein: HIGH
 random_effect: HIGH
 restore_hunger: NONE
 take_damage: MED

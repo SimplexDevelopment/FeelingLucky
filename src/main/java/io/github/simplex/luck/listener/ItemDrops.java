@@ -22,6 +22,7 @@ public class ItemDrops extends AbstractListener {
 
     public ItemDrops(FeelingLucky plugin) {
         super(plugin);
+        register(this);
     }
 
     @EventHandler

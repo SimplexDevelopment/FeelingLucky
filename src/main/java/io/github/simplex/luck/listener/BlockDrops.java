@@ -13,6 +13,7 @@ import java.util.List;
 public final class BlockDrops extends AbstractListener {
     public BlockDrops(FeelingLucky plugin) {
         super(plugin);
+        register(this);
     }
 
     @EventHandler
@@ -21,7 +22,6 @@ public final class BlockDrops extends AbstractListener {
         Luck luck = getHandler().getLuckContainer(player);
         List<Item> items = event.getItems();
         if (luck.quickRNG(luck.getValue()) && doesQualify("block_drops", luck.getValue())) {
-            event.getItems().clear();
             event.getItems().addAll(items.stream().map(SneakyWorker::move).toList());
         }
     }

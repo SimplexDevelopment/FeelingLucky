@@ -25,6 +25,7 @@ public final class PlayerListener extends AbstractListener {
     public PlayerListener(FeelingLucky plugin) {
         super(plugin);
         this.timer = new CooldownTimer();
+        register(this);
     }
 
     @EventHandler
@@ -47,6 +48,7 @@ public final class PlayerListener extends AbstractListener {
                 player.sendMessage(MiniComponent.info("Your luck multiplier has increased by 0.1!"));
             }
             double rng = Luck.RNG().nextDouble(2.0, 5.0);
+            rng = Math.round(rng);
             player.getInventory().remove(player.getInventory().getItemInMainHand());
             luck.addTo(rng);
             plugin.getHandler().updatePlayer(player, luck);

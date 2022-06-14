@@ -14,6 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class UnbreakableTool extends AbstractListener {
     public UnbreakableTool(FeelingLucky plugin) {
         super(plugin);
+        register(this);
     }
 
     @EventHandler

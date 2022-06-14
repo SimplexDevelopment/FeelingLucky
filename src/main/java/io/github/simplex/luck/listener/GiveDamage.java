@@ -11,6 +11,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 public class GiveDamage extends AbstractListener {
     public GiveDamage(FeelingLucky plugin) {
         super(plugin);
+        register(this);
     }
 
     @EventHandler
@@ -19,9 +20,8 @@ public class GiveDamage extends AbstractListener {
                 && (e.getEntity() instanceof LivingEntity)) {
             double nextDmg = e.getDamage() + Luck.RNG().nextDouble(1.0, 5.0);
             Luck luck = plugin.getHandler().getLuckContainer(player);
-            if (luck.quickRNG(luck.getValue())) {
+            if (luck.quickRNG(luck.getValue()) && doesQualify("give_damage", luck.getValue())) {
                 e.setDamage(nextDmg);
-                player.sendMessage(MiniComponent.info("Your luck has increased your damage output!"));
             }
         }
     }

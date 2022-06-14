@@ -10,6 +10,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 public final class CheatDeath extends AbstractListener {
     public CheatDeath(FeelingLucky plugin) {
         super(plugin);
+        register(this);
     }
 
     @EventHandler

@@ -14,6 +14,7 @@ import org.bukkit.potion.PotionEffectType;
 public class IllOmen extends AbstractListener {
     public IllOmen(FeelingLucky plugin) {
         super(plugin);
+        register(this);
     }
 
     @EventHandler

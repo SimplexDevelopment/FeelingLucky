@@ -19,6 +19,7 @@ public class HideCheck extends AbstractListener {
 
     public HideCheck(FeelingLucky plugin) {
         super(plugin);
+        register(this);
     }
 
     @EventHandler
@@ -41,10 +42,10 @@ public class HideCheck extends AbstractListener {
     @EventHandler
     public void checkForSneak(PlayerToggleSneakEvent event) {
         Player player = event.getPlayer();
-        if (!player.isSneaking()) return;
+        if (player.isSneaking()) return;
 
         Luck luck = plugin.getHandler().getLuckContainer(player);
-        if (luck.quickRNG(luck.getValue()) && !luck.isMarked(player)) {
+        if (luck.quickRNG(luck.getValue()) && doesQualify("hide_check", luck.getValue())) {
             entityMapList.get(player).forEach(e -> {
                 e.getTrackedPlayers().remove(player);
             });

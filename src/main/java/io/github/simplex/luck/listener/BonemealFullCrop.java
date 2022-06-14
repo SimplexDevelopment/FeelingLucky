@@ -17,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 public final class BonemealFullCrop extends AbstractListener {
     public BonemealFullCrop(FeelingLucky plugin) {
         super(plugin);
+        register(this);
     }
 
     @EventHandler
@@ -42,7 +43,6 @@ public final class BonemealFullCrop extends AbstractListener {
             crop.setAge(crop.getMaximumAge());
             data.merge(crop);
             block.setBlockData(data);
-            player.sendMessage(MiniComponent.info("You got lucky and your crops grew to maturity."));
         }
     }
 }

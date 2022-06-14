@@ -1,5 +1,6 @@
 package io.github.simplex.luck.listener;
 
+import io.github.simplex.lib.MiniComponent;
 import io.github.simplex.lib.PotionEffectBuilder;
 import io.github.simplex.luck.FeelingLucky;
 import io.github.simplex.luck.player.Luck;
@@ -13,6 +14,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 public class TakeDamage extends AbstractListener {
     public TakeDamage(FeelingLucky plugin) {
         super(plugin);
+        register(this);
     }
 
     @EventHandler
@@ -36,7 +38,7 @@ public class TakeDamage extends AbstractListener {
                     if (luck.quickRNG(percentage)) {
                         event.setCancelled(true);
                         player.damage(event.getDamage() * 2);
-                        player.sendMessage(Component.empty().content("You were unlucky and took double damage."));
+                        player.sendMessage(MiniComponent.warn("You were unlucky and took double damage!"));
                     }
                     return;
                 }
@@ -44,7 +46,6 @@ public class TakeDamage extends AbstractListener {
                 if (luck.quickRNG(percentage) && doesQualify("take_damage", percentage)) {
                     event.setCancelled(true);
                     player.damage(event.getDamage() / 2);
-                    player.sendMessage(Component.empty().content("You got lucky and took less damage."));
                 }
             }
         }
@@ -70,7 +71,7 @@ public class TakeDamage extends AbstractListener {
                     event.setCancelled(true);
                     player.getActivePotionEffects().removeIf(p -> ListBox.potionEffects.contains(p.getType()));
                     player.setFireTicks(0);
-                    player.sendMessage(Component.empty().content("You got lucky and your afflictions were cured."));
+                    player.sendMessage(MiniComponent.info("You got lucky and your afflictions were cured."));
                 }
             }
         }

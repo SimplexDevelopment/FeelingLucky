@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'io.github.simplex'
-version = '1.2.0-RC01'
+version = '1.2.0'
 
 repositories {
     mavenCentral()

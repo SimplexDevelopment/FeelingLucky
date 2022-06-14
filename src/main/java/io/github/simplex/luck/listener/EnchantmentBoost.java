@@ -13,6 +13,7 @@ import java.util.Map;
 public final class EnchantmentBoost extends AbstractListener {
     public EnchantmentBoost(FeelingLucky plugin) {
         super(plugin);
+        register(this);
     }
 
     @EventHandler

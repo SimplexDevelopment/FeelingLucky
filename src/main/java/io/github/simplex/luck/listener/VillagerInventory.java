@@ -31,6 +31,8 @@ public class VillagerInventory extends AbstractListener {
         recipe.setPriceMultiplier(1.25F);
         recipe.setVillagerExperience(25);
         recipe.setSpecialPrice(4);
+
+        register(this);
     }
 
     @EventHandler

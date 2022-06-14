@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 public final class ExpBoost extends AbstractListener {
     public ExpBoost(FeelingLucky plugin) {
         super(plugin);
+        register(this);
     }
 
     @EventHandler

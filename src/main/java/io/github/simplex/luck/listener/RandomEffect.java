@@ -15,6 +15,7 @@ import java.util.List;
 public class RandomEffect extends AbstractListener {
     public RandomEffect(FeelingLucky plugin) {
         super(plugin);
+        register(this);
     }
 
     @EventHandler

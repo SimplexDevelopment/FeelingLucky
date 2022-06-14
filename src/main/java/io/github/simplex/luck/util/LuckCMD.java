@@ -22,12 +22,16 @@ public class LuckCMD extends Command implements TabCompleter, PluginIdentifiable
         super("luck", "FeelingLucky main command.", "/<command> <info | set | reset | give | take> [player] [amount]", List.of());
         this.plugin = plugin;
         setPermission("luck.default");
-        register(plugin.getServer().getCommandMap());
+        plugin.getCommandMap().register("luck", "FeelingLucky", this);
+        plugin.getLogger().info("Successfully registered command: Luck");
     }
 
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
-        if (args.length < 1 || args.length > 3) return false;
+        if (args.length < 1 || args.length > 3) {
+            sender.sendMessage(this.getUsage());
+            return false;
+        }
 
         if (args.length == 3) {
             if ((sender instanceof ConsoleCommandSender) || sender.hasPermission("luck.admin")) {
@@ -65,21 +69,21 @@ public class LuckCMD extends Command implements TabCompleter, PluginIdentifiable
                         luck.setValue(amount);
                         plugin.getHandler().updatePlayer(player, luck);
                         config.setLuck(luck.getValue());
-                        sender.sendMessage(MiniComponent.info("Successfully reset " + args[1] + "'s Luck stat."));
+                        sender.sendMessage(MiniComponent.info("Successfully set " + args[1] + "'s Luck stat to " + amount + "."));
                         return true;
                     }
                     case "give" -> {
                         luck.addTo(amount);
                         plugin.getHandler().updatePlayer(player, luck);
                         config.setLuck(luck.getValue());
-                        sender.sendMessage(MiniComponent.info("Successfully reset " + args[1] + "'s Luck stat."));
+                        sender.sendMessage(MiniComponent.info("Successfully gave " + args[1] + " " + amount + " points of luck!"));
                         return true;
                     }
                     case "take" -> {
                         luck.takeFrom(amount);
                         plugin.getHandler().updatePlayer(player, luck);
                         config.setLuck(luck.getValue());
-                        sender.sendMessage(MiniComponent.info("Successfully reset " + args[1] + "'s Luck stat."));
+                        sender.sendMessage(MiniComponent.info("Successfully took " + amount + " points of luck from " + args[1]));
                         return true;
                     }
                 }

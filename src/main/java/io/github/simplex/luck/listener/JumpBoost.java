@@ -11,16 +11,17 @@ import org.bukkit.util.Vector;
 public class JumpBoost extends AbstractListener {
     public JumpBoost(FeelingLucky plugin) {
         super(plugin);
+        register(this);
     }
 
     @EventHandler
     public void detectJumping(PlayerJumpEvent event) {
         Player player = event.getPlayer(); // Player is never null; they're in game and jumping.
         Luck luck = plugin.getHandler().getLuckContainer(player);
+        Vector velocity = player.getVelocity().clone();
 
-        if (luck.quickRNG(luck.getValue()) && !luck.isMarked(player)) {
-            player.setVelocity(new Vector(0, 2, 0));
-            player.sendMessage(MiniComponent.info("Your luck has boosted your jump height!"));
+        if (luck.quickRNG(luck.getValue()) && doesQualify("jump_boost", luck.getValue())) {
+            player.setVelocity(new Vector(velocity.getX(), velocity.getY() + 3, velocity.getZ()));
         }
     }
 }

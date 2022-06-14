@@ -4,14 +4,14 @@ import io.github.simplex.luck.listener.*;
 import io.github.simplex.luck.player.PlayerConfig;
 import io.github.simplex.luck.player.PlayerHandler;
 import io.github.simplex.luck.util.LuckCMD;
-import io.github.simplex.luck.util.SneakyWorker;
+import io.github.simplex.luck.util.RegenerateConfigCMD;
 import io.github.simplex.luck.util.SpecialFootItem;
 import io.github.simplex.metrics.Metrics;
+import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,9 +41,10 @@ public final class FeelingLucky extends JavaPlugin {
         loadPlayerConfigurations();
         getLogger().info("Attempting to load the main configuration...");
         config = new Config(this);
-        getLogger().info("Main Config loaded successfully! Attempting to load the Luck command...");
+        getLogger().info("Main Config loaded successfully! Loading commands...");
         new LuckCMD(this);
-        getLogger().info("Successfully loaded the Luck command!");
+        new RegenerateConfigCMD(this);
+        getLogger().info("Successfully loaded all commands!");
 
         getLogger().info("Successfully initialized!");
     }
@@ -79,18 +80,23 @@ public final class FeelingLucky extends JavaPlugin {
     }
 
     private void registerListeners() {
-        try {
-            Class<?>[] listeners = SneakyWorker.getClasses(AbstractListener.class.getPackage().getName());
-            Arrays.stream(listeners).forEach(l -> {
-                if (AbstractListener.class.isAssignableFrom(l)) {
-                    if (l.equals(AbstractListener.class)) return;
-
-                    SneakyWorker.sneakyTry(() -> l.getDeclaredConstructor(FeelingLucky.class).newInstance(this));
-                }
-            });
-        } catch (IOException | ClassNotFoundException ex) {
-            getLogger().severe(ex.getMessage());
-        }
+        new BlockDrops(this);
+        new BonemealFullCrop(this);
+        new CheatDeath(this);
+        new EnchantmentBoost(this);
+        new ExpBoost(this);
+        new GiveDamage(this);
+        new HideCheck(this);
+        new IllOmen(this);
+        new ItemDrops(this);
+        new JumpBoost(this);
+        new OreVein(this);
+        new PlayerListener(this);
+        new RandomEffect(this);
+        new RestoreHunger(this);
+        new TakeDamage(this);
+        new UnbreakableTool(this);
+        new VillagerInventory(this);
     }
 
     public PlayerHandler getHandler() {
@@ -105,5 +111,9 @@ public final class FeelingLucky extends JavaPlugin {
 
     public SpecialFootItem getFoot() {
         return specialFootItem;
+    }
+
+    public CommandMap getCommandMap() {
+        return getServer().getCommandMap();
     }
 }

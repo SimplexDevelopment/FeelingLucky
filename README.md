@@ -22,7 +22,7 @@ For this, the command is <b><span style="color:violet">/luck reload -m</color></
 
 In order to run <b>FeelingLucky</b> v<b>1.1.0</b>, the latest version of Paper or Spigot is required.
 
-#### <center><span style="color:red">Note: Paper is REQUIRED for this plugin to run. Spigot is not supported, and support for Spigot will not be added in the future.</center></span>
+#### <center><span style="color:red">Note: Paper is REQUIRED for this plugin to run. Spigot is not supported, however Spigot support is currently in progress.</center></span>
 
 ### <center>Note: If you are migrating from an Alpha build, the plugin configuration folder will need to be regenerated.</center>
 

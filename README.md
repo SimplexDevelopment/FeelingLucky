@@ -17,6 +17,7 @@ Admins can set, reset, add to, and take from player's luck stat.
 Admins can also reload the main configuration, as well as individual and all player configurations.
 For this, the command is <b><span style="color:violet">/luck reload -m</color></b> for the main config, 
 <b><span style="color:violet">/luck reload</color></b> to reload all player configurations, and <b><span style="color:violet">/luck reload -p <i>PLAYER_NAME</i></span></b> to reload individual player configuration files.
+Server owners and/or individuals with console access can run /rgc to regenerate the main configuration file in the case that there are values missing, corrupted, or invalid.
 
 ## <center><u><span style="color:blue">Server Requirements:</u></center>
 

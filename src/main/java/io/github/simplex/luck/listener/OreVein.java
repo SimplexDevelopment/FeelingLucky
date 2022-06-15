@@ -12,6 +12,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class OreVein extends AbstractListener {
@@ -31,22 +33,22 @@ public class OreVein extends AbstractListener {
         }
     }
 
-    public Stream<Block> getOresInArea(Block block) {
+    public List<Block> getOresInArea(Block block) {
         Stream.Builder<Block> streamBuilder = Stream.builder();
         Location start = block.getLocation();
         World world = block.getWorld();
-        Stream<Tag<Material>> materialStream = Stream.of(Tag.COAL_ORES, Tag.COPPER_ORES, Tag.DIAMOND_ORES, Tag.GOLD_ORES, Tag.IRON_ORES, Tag.EMERALD_ORES, Tag.LAPIS_ORES, Tag.REDSTONE_ORES);
+        List<Tag<Material>> materialList = List.of(Tag.COAL_ORES, Tag.COPPER_ORES, Tag.DIAMOND_ORES, Tag.GOLD_ORES, Tag.IRON_ORES, Tag.EMERALD_ORES, Tag.LAPIS_ORES, Tag.REDSTONE_ORES);
         for (int x = start.getBlockX() - 15; x <= start.getBlockX() + 15; x++) {
             for (int y = start.getBlockY() - 15; y <= start.getBlockY() + 15; y++) {
                 for (int z = start.getBlockZ() - 15; z <= start.getBlockZ() + 15; z++) {
                     Location location = new Location(world, x, y, z);
                     Material blockType = location.getBlock().getType();
-                    if (materialStream.anyMatch(o -> o.isTagged(blockType))) {
+                    if (materialList.stream().anyMatch(o -> o.isTagged(blockType))) {
                         streamBuilder.add(location.getBlock());
                     }
                 }
             }
         }
-        return streamBuilder.build().filter(b -> b.getType().equals(block.getType()));
+        return streamBuilder.build().filter(b -> b.getType().equals(block.getType())).toList();
     }
 }

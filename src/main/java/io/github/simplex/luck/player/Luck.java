@@ -4,10 +4,16 @@ import io.github.simplex.api.LuckContainer;
 import io.github.simplex.luck.FeelingLucky;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 @SuppressWarnings("all")
 public class Luck implements LuckContainer {
@@ -34,10 +40,16 @@ public class Luck implements LuckContainer {
         event = new PlayerLuckChangeEvent(this);
     }
 
+    /**
+     * This creates a new instance of a pseudorandom number generator based off entropy provided by the operating system.
+     * This will allow for a much purer randomization, due to entropy being different for each call.
+     *
+     * @return A new instance of SecureRandom. Each time this method is called a new instance is created to provide maximum variation with entropic calculations.
+     */
     @Contract(pure = true,
             value = "-> new")
-    public static @NotNull SplittableRandom RNG() {
-        return new SplittableRandom();
+    public static @NotNull SecureRandom RNG() {
+        return new SecureRandom(SecureRandom.getSeed(20));
     }
 
     public static boolean quickRNGnoMultiplier(double value) {
@@ -51,6 +63,10 @@ public class Luck implements LuckContainer {
         double actual = Math.round((rng / 1024.0) * 100);
 
         return (value >= actual);
+    }
+
+    public boolean playerHasLuckPE() {
+        return player.hasPotionEffect(PotionEffectType.LUCK);
     }
 
     public FeelingLucky getPlugin() {
@@ -89,6 +105,12 @@ public class Luck implements LuckContainer {
         return player;
     }
 
+    /**
+     * Quickly calculate whether or not the player has enough luck to trigger the condition.
+     *
+     * @param value The players luck value.
+     * @return True if the player meets the criteria, false if they do not.
+     */
     public boolean quickRNG(double value) {
         double rng;
         if (value >= 1024.0) {
@@ -97,13 +119,19 @@ public class Luck implements LuckContainer {
             rng = RNG().nextDouble(0.0, 1024.0);
         }
 
+        AtomicReference<Double> multiplier = new AtomicReference<>(multiplier());
         double actual = Math.round((rng / 1024) * 100);
+        double newVal = Math.round((value / 1024) * 100);
 
-        if (multiplier() > 1.0) {
-            return ((value * multiplier()) >= actual);
+        if (playerHasLuckPE()) {
+            player.getActivePotionEffects()
+                    .stream()
+                    .filter(p -> p.getType().equals(PotionEffectType.LUCK))
+                    .findFirst()
+                    .ifPresent(p -> multiplier.updateAndGet(v -> new Double((double) (v + p.getAmplifier()))));
         }
 
-        return (value >= actual);
+        return ((newVal * multiplier.get()) >= actual);
     }
 
     public void reset() {

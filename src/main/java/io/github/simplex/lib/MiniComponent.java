@@ -21,17 +21,17 @@ public class MiniComponent {
     }
 
     @Contract("_ -> new")
-    public static Component info(String content) {
+    public static String info(String content) {
         return new MiniComponent(content).color(ChatColor.GREEN).send();
     }
 
     @Contract("_ -> new")
-    public static Component warn(String content) {
+    public static String warn(String content) {
         return new MiniComponent(content).color(ChatColor.YELLOW).decorate(TextDecoration.ITALIC).send();
     }
 
     @Contract("_ -> new")
-    public static Component err(String content) {
+    public static String err(String content) {
         return new MiniComponent(content).color(ChatColor.RED).decorate(TextDecoration.BOLD).send();
     }
 
@@ -45,7 +45,7 @@ public class MiniComponent {
         return this;
     }
 
-    public Component send() {
+    public String send() {
         if (color == null) {
             if (decoration == null) return Component.empty().content(content);
 

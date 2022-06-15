@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.1.0'
 }
 
 group = 'io.github.simplex'
@@ -9,10 +10,19 @@ repositories {
     mavenCentral()
     maven { url = uri("https://s01.oss.sonatype.org/content/groups/public/") }
     maven { url = uri("https://papermc.io/repo/repository/maven-public/")}
+    maven { url = uri("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")}
 }
 
 dependencies {
+    compileOnly("org.spigotmc:spigot-api:1.19-R0.1-SNAPSHOT")
     compileOnly("io.papermc.paper:paper-api:1.19-R0.1-SNAPSHOT")
+    shadow("org.jetbrains:annotations:16.0.2")
+    shadow("net.kyori:adventure-api:4.11.0")
+    shadow("io.papermc:paperlib:1.0.7")
+}
+
+shadowJar {
+    relocate("io.papermc.lib", "io.github.simplex.paperlib")
 }
 
 def targetJavaVersion = 17

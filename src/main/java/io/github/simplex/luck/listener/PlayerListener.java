@@ -42,7 +42,8 @@ public final class PlayerListener extends AbstractListener {
             return;
         }
 
-        if (action.isRightClick() && player.getInventory().getItemInMainHand().getType().equals(foot.getType())) {
+        if ((action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.RIGHT_CLICK_BLOCK))
+                && player.getInventory().getItemInMainHand().getType().equals(foot.getType())) {
             if (foot.getItemMeta().equals(special.meta()) || foot.equals(special.get())) {
                 luck.setMultiplier(luck.multiplier() + 0.1);
                 player.sendMessage(MiniComponent.info("Your luck multiplier has increased by 0.1!"));

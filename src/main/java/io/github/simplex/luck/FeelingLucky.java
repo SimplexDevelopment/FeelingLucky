@@ -7,11 +7,14 @@ import io.github.simplex.luck.util.LuckCMD;
 import io.github.simplex.luck.util.RegenerateConfigCMD;
 import io.github.simplex.luck.util.SpecialFootItem;
 import io.github.simplex.metrics.Metrics;
+import io.papermc.lib.PaperLib;
 import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,9 +27,15 @@ public final class FeelingLucky extends JavaPlugin {
 
     private PlayerHandler handler;
     private Config config;
+    private CommandMap commandMap = null;
 
     public Map<UUID, PlayerConfig> getConfigMap() {
         return configMap;
+    }
+
+    @Override
+    public void onLoad() {
+        if (!PaperLib.isPaper()) PaperLib.suggestPaper(this);
     }
 
     @Override
@@ -41,7 +50,9 @@ public final class FeelingLucky extends JavaPlugin {
         loadPlayerConfigurations();
         getLogger().info("Attempting to load the main configuration...");
         config = new Config(this);
-        getLogger().info("Main Config loaded successfully! Loading commands...");
+        getLogger().info("Main Config loaded successfully! Attempting to open the CommandMap...");
+        initCommandMap();
+        getLogger().info("Command Map successfully initialized! Attempting to register the commands...");
         new LuckCMD(this);
         new RegenerateConfigCMD(this);
         getLogger().info("Successfully loaded all commands!");
@@ -56,6 +67,16 @@ public final class FeelingLucky extends JavaPlugin {
         getLogger().info("Complete! Saving the main config...");
         config.save();
         getLogger().info("Complete! Goodbye! :)");
+    }
+
+    private void initCommandMap() {
+        try {
+            Field f = getServer().getClass().getDeclaredField("commandMap");
+            f.setAccessible(true);
+            commandMap = (CommandMap) f.get(getServer());
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadPlayerConfigurations() {
@@ -84,7 +105,6 @@ public final class FeelingLucky extends JavaPlugin {
         new BonemealFullCrop(this);
         new CheatDeath(this);
         new EnchantmentBoost(this);
-        new ExpBoost(this);
         new GiveDamage(this);
         new HideCheck(this);
         new IllOmen(this);
@@ -97,6 +117,10 @@ public final class FeelingLucky extends JavaPlugin {
         new TakeDamage(this);
         new UnbreakableTool(this);
         new VillagerInventory(this);
+
+        if (PaperLib.isPaper()) {
+            new ExpBoost(this);
+        }
     }
 
     public PlayerHandler getHandler() {
@@ -113,7 +137,8 @@ public final class FeelingLucky extends JavaPlugin {
         return specialFootItem;
     }
 
+    @Nullable
     public CommandMap getCommandMap() {
-        return getServer().getCommandMap();
+        return commandMap;
     }
 }

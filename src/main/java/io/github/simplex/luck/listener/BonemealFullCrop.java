@@ -1,7 +1,6 @@
 package io.github.simplex.luck.listener;
 
 import io.github.simplex.lib.ItemBuilder;
-import io.github.simplex.lib.MiniComponent;
 import io.github.simplex.luck.FeelingLucky;
 import io.github.simplex.luck.player.Luck;
 import org.bukkit.Material;
@@ -35,7 +34,7 @@ public final class BonemealFullCrop extends AbstractListener {
 
         BlockData data = block.getBlockData();
 
-        if (action.isRightClick()
+        if ((action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.RIGHT_CLICK_BLOCK))
                 && handItem.isSimilar(bonemeal)
                 && (data instanceof Ageable crop)
                 && luck.quickRNG(luck.getValue())

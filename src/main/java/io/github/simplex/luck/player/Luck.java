@@ -128,7 +128,7 @@ public class Luck implements LuckContainer {
                     .stream()
                     .filter(p -> p.getType().equals(PotionEffectType.LUCK))
                     .findFirst()
-                    .ifPresent(p -> multiplier.updateAndGet(v -> new Double((double) (v + p.getAmplifier()))));
+                    .ifPresent(p -> multiplier.updateAndGet(v -> (v + p.getAmplifier())));
         }
 
         return ((newVal * multiplier.get()) >= actual);

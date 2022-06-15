@@ -1,5 +1,6 @@
 package io.github.simplex.luck.listener;
 
+import io.github.simplex.lib.MiniComponent;
 import io.github.simplex.luck.FeelingLucky;
 import io.github.simplex.luck.player.Luck;
 import org.bukkit.entity.LivingEntity;

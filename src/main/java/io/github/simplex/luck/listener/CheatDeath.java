@@ -2,10 +2,8 @@ package io.github.simplex.luck.listener;
 
 import io.github.simplex.lib.MiniComponent;
 import io.github.simplex.luck.FeelingLucky;
-import io.github.simplex.luck.player.CancellablePlayerDeathEvent;
 import io.github.simplex.luck.player.Luck;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
@@ -16,8 +14,8 @@ public final class CheatDeath extends AbstractListener {
     }
 
     @EventHandler
-    public void cheatDeath(CancellablePlayerDeathEvent event) {
-        Player player = event.getEntity();
+    public void cheatDeath(PlayerDeathEvent event) {
+        Player player = event.getPlayer();
         Luck luck = getHandler().getLuckContainer(player);
         double absorption = Math.round(Luck.RNG().nextDouble(5.0, 10.0));
         if (luck.quickRNG(luck.getValue()) && doesQualify("cheat_death", luck.getValue())) {

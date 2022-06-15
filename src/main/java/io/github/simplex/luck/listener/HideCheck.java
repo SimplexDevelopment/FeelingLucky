@@ -5,7 +5,6 @@ import io.github.simplex.luck.FeelingLucky;
 import io.github.simplex.luck.player.Luck;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
@@ -16,7 +15,7 @@ import org.bukkit.event.player.PlayerToggleSneakEvent;
 import java.util.*;
 
 public class HideCheck extends AbstractListener {
-    public Map<Player, List<Mob>> entityMapList = new HashMap<>();
+    public Map<Player, List<Entity>> entityMapList = new HashMap<>();
 
     public HideCheck(FeelingLucky plugin) {
         super(plugin);
@@ -31,8 +30,8 @@ public class HideCheck extends AbstractListener {
     @EventHandler
     public void checkTargeting(EntityTargetLivingEntityEvent event) {
         if (event.getTarget() instanceof Player player) {
-            if (event.getEntity() instanceof Mob entity) {
-                List<Mob> buffer = entityMapList.get(player).isEmpty() ?
+            if (event.getEntity() instanceof LivingEntity entity) {
+                List<Entity> buffer = entityMapList.get(player).isEmpty() ?
                         new ArrayList<>() : entityMapList.get(player);
                 buffer.add(entity);
                 entityMapList.replace(player, buffer);
@@ -47,7 +46,9 @@ public class HideCheck extends AbstractListener {
 
         Luck luck = plugin.getHandler().getLuckContainer(player);
         if (luck.quickRNG(luck.getValue()) && doesQualify("hide_check", luck.getValue())) {
-            entityMapList.get(player).forEach(e -> e.getTarget().remove());
+            entityMapList.get(player).forEach(e -> {
+                e.getTrackedPlayers().remove(player);
+            });
             player.sendMessage(MiniComponent.info("Your luck has hidden you from sight."));
         }
     }

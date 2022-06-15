@@ -1,5 +1,6 @@
 package io.github.simplex.luck.listener;
 
+import io.github.simplex.luck.Config;
 import io.github.simplex.luck.FeelingLucky;
 import io.github.simplex.luck.player.PlayerHandler;
 import org.bukkit.event.Listener;

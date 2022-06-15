@@ -25,7 +25,7 @@ public class OreVein extends AbstractListener {
     public void playerMine(BlockBreakEvent event) {
         Player player = event.getPlayer();
         Luck luck = plugin.getHandler().getLuckContainer(player);
-        if (luck.quickRNG(luck.getValue()) && doesQualify("ore_vein", luck.getValue()) && event.getBlock().isPreferredTool(player.getInventory().getItemInMainHand())) {
+        if (luck.quickRNG(luck.getValue()) && doesQualify("ore_vein", luck.getValue()) && event.getBlock().isValidTool(player.getInventory().getItemInMainHand())) {
             getOresInArea(event.getBlock()).forEach(Block::breakNaturally);
             player.sendMessage(MiniComponent.info("Your luck has let you mine all the blocks with one swing."));
         }

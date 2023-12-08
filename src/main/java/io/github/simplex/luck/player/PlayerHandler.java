@@ -38,9 +38,10 @@ public class PlayerHandler implements Listener {
             plugin.getConfigMap().put(player.getUniqueId(), playerConfig);
         }
 
-        String username = playerConfig.getConfig().getString("username");
-        double luck = playerConfig.getConfig().getDouble("luck");
-        double multiplier = playerConfig.getConfig().getDouble("multiplier");
+        String username = playerConfig.getUsername();
+        double luck = playerConfig.getLuck();
+        double multiplier = playerConfig.getMultiplier();
+        boolean verbose = playerConfig.isVerbose();
 
         if (!player.getName().equalsIgnoreCase(username)) {
             playerConfig.getConfig().set("username", player.getName());
@@ -49,6 +50,7 @@ public class PlayerHandler implements Listener {
         }
 
         Luck container = new Luck(plugin, player, multiplier);
+        container.setVerbose(verbose);
         container.setValue(luck);
 
         playerLuckMap.put(player, container);

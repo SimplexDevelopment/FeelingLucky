@@ -1,17 +1,19 @@
 package io.github.simplex.luck;
 
 import io.github.simplex.luck.listener.AbstractListener;
+import io.github.simplex.luck.util.Logs;
 import io.github.simplex.luck.util.SneakyWorker;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.jetbrains.annotations.NotNull;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("ResultOfMethodCallIgnored")
-public class Config extends YamlConfiguration {
-    private final Map<String, Object> configEntries = new HashMap<>() {{
+public class Config extends YamlConfiguration
+{
+    private final Map<String, Object> configEntries = new HashMap<>()
+    {{
         put("high_rarity_chance", 512.0);
         put("medium_rarity_chance", 128.0);
         put("low_rarity_chance", 64.0);
@@ -32,67 +34,83 @@ public class Config extends YamlConfiguration {
     }};
     private File configFile;
 
-    public Config(FeelingLucky plugin) {
+    public Config(FeelingLucky plugin)
+    {
         File dataFolder = plugin.getDataFolder();
-        if (dataFolder.mkdirs()) {
+        if (dataFolder.mkdirs())
+        {
             plugin.getLogger().info("Created new data folder. Writing new configuration file...");
             plugin.saveResource("config.yml", true);
         }
 
         File configFile = new File(dataFolder, "config.yml");
-        if (!configFile.exists()) {
+        if (!configFile.exists())
+        {
             plugin.getLogger().info("No configuration file exists. Creating a new one...");
             plugin.saveResource("config.yml", true);
         }
 
         this.configFile = configFile;
 
-        if (validateIntegrity(this.configFile)) {
+        if (validateIntegrity(this.configFile))
+        {
             load();
-        } else {
+        }
+        else
+        {
             configEntries.forEach(super::set);
-            plugin.getLogger().warning("Your configuration file is missing keys. " +
-                    "\nPlease use /rgc in the console to regenerate the config file. " +
-                    "\nAlternatively, delete the config.yml and restart your server. " +
-                    "\nIt is safe to ignore this, as default values will be used." +
-                    "\nHowever, it is highly recommended to regenerate the configuration.");
+            Logs.warn("Your configuration file is missing keys. " +
+                      "\nPlease use /rgc in the console to regenerate the config file. " +
+                      "\nAlternatively, delete the config.yml and restart your server. " +
+                      "\nIt is safe to ignore this, as default values will be used." +
+                      "\nHowever, it is highly recommended to regenerate the configuration.");
         }
     }
 
-    public void save() {
+    public void save()
+    {
         SneakyWorker.sneakyTry(() -> save(configFile));
     }
 
-    public void load() {
+    public void load()
+    {
         SneakyWorker.sneakyTry(() -> load(configFile));
     }
 
-    public void reload() {
+    public void reload()
+    {
         save();
         load();
     }
 
-    public boolean validateIntegrity(@NotNull File fromDisk) {
+    public boolean validateIntegrity(@NotNull File fromDisk)
+    {
         YamlConfiguration disk = YamlConfiguration.loadConfiguration(fromDisk);
-        if (disk.getKeys(true).size() <= 0) {
+        if (disk.getKeys(true).isEmpty())
+        {
             return false;
         }
 
         boolean result = true;
 
-        for (String key : configEntries.keySet()) {
-            if (!disk.getKeys(false).contains(key)) {
-                if (result) result = false;
+        for (String key : configEntries.keySet())
+        {
+            if (!disk.getKeys(false).contains(key))
+            {
+                if (result)
+                    result = false;
             }
         }
         return result;
     }
 
-    public AbstractListener.Rarity getRarity(String name) {
+    public AbstractListener.Rarity getRarity(String name)
+    {
         return AbstractListener.Rarity.valueOf(getString(name));
     }
 
-    public double getChance(String path) {
+    public double getChance(String path)
+    {
         return getDouble(path);
     }
 }

@@ -1,55 +1,38 @@
 package io.github.simplex.luck.player;
 
 import io.github.simplex.luck.FeelingLucky;
-import io.github.simplex.luck.util.SneakyWorker;
+import io.github.simplex.luck.util.Logs;
+import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.attribute.Attribute;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.nio.charset.StandardCharsets;
-import java.util.UUID;
-
-public class PlayerConfig {
+public class PlayerConfig
+{
     private final File configFile;
     private final OfflinePlayer player;
-    private volatile YamlConfiguration config;
+    private final FeelingLucky plugin;
+    private YamlConfiguration config;
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public PlayerConfig(FeelingLucky plugin, Player player) {
+    public PlayerConfig(FeelingLucky plugin, Player player)
+    {
+        this.plugin = plugin;
         this.player = player;
-        if (!plugin.getDataFolder().exists()) plugin.getDataFolder().mkdirs();
-        File dataFolder = new File(plugin.getDataFolder(), "players");
-        if (!dataFolder.exists()) dataFolder.mkdirs();
-        File file = new File(dataFolder, player.getUniqueId() + ".yml");
-        if (!file.exists()) {
-            String name = "username: " + player.getName();
-            String luck = "luck: " + 0;
-            String multiplier = "multiplier: " + 1.0;
-
-            SneakyWorker.sneakyTry(() -> {
-                file.createNewFile();
-
-                BufferedWriter writer = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8));
-                writer.write(name);
-                writer.newLine();
-                writer.write(luck);
-                writer.newLine();
-                writer.write(multiplier);
-                writer.close();
-            });
-        }
+        final File file = configFile(plugin, player);
         configFile = file;
         config = YamlConfiguration.loadConfiguration(configFile);
 
         String tempUsername = config.getString("username");
 
-        if (tempUsername == null) {
+        if (tempUsername == null)
+        {
             config.set("username", player.getName());
             config.set("luck", plugin.getHandler().getLuckContainer(player).getDefaultValue());
             config.set("multiplier", "1.0");
@@ -57,50 +40,141 @@ public class PlayerConfig {
         }
     }
 
-    protected PlayerConfig(FeelingLucky plugin, File file) {
+    protected PlayerConfig(FeelingLucky plugin, File file)
+    {
+        this.plugin = plugin;
         this.configFile = file;
         this.player = Bukkit.getOfflinePlayer(UUID.fromString(file.getName().split("\\.")[0]));
         config = YamlConfiguration.loadConfiguration(configFile);
     }
 
     @Contract("_, _ -> new")
-    public static PlayerConfig initFrom(FeelingLucky plugin, File file) {
+    public static PlayerConfig initFrom(FeelingLucky plugin, File file)
+    {
         return new PlayerConfig(plugin, file);
     }
 
-    public void save() {
-        SneakyWorker.sneakyTry(() -> config.save(configFile));
+    @NotNull
+    private File configFile(FeelingLucky plugin, Player player)
+    {
+        if (!plugin.getDataFolder().exists())
+            plugin.getDataFolder().mkdirs();
+        File dataFolder = new File(plugin.getDataFolder(), "players");
+        if (!dataFolder.exists())
+            dataFolder.mkdirs();
+        File file = new File(dataFolder, player.getUniqueId() + ".yml");
+        if (!file.exists())
+        {
+            try
+            {
+                file.createNewFile();
+                final YamlConfiguration v0 = new YamlConfiguration();
+                v0.set("username", player.getName());
+                v0.set("luck", 0);
+                v0.set("multiplier", 1.0);
+                v0.set("verbose", true);
+                v0.save(file);
+            }
+            catch (IOException ex)
+            {
+                Logs.error(ex);
+            }
+        }
+        return file;
     }
 
-    public void load() {
-        SneakyWorker.sneakyTry(() -> config = YamlConfiguration.loadConfiguration(configFile));
+    public void save()
+    {
+        try
+        {
+            config.save(configFile);
+        }
+        catch (IOException ex)
+        {
+            Logs.error(ex);
+        }
     }
 
-    public void reload() {
+    public void load()
+    {
+        try
+        {
+            config.load(configFile);
+        }
+        catch (IOException | InvalidConfigurationException ex)
+        {
+            Logs.error(ex);
+
+            Logs.warn("Attempting to reinitialize variable... this is dangerous!");
+
+            try
+            {
+                config = YamlConfiguration.loadConfiguration(configFile);
+            }
+            catch (IllegalArgumentException th)
+            {
+                Logs.error(th);
+            }
+
+        }
+    }
+
+    public void reload()
+    {
         save();
         load();
     }
 
-    public OfflinePlayer getPlayer() {
+    public OfflinePlayer getPlayer()
+    {
         return player;
     }
 
-    public void setUsername(String name) {
-        config.set("username", name);
-        save();
+    public String getUsername() {
+        return config.getString("username");
     }
 
-    public void setLuck(double luck) {
+    public double getLuck()
+    {
+        return config.getDouble("luck");
+    }
+
+    public void setLuck(double luck)
+    {
         config.set("luck", luck);
-        save();
+        reload();
     }
 
-    public void setMultiplier(double multiplier) {
+    public double getMultiplier()
+    {
+        return config.getDouble("multiplier");
+    }
+
+    public void setMultiplier(double multiplier)
+    {
         config.set("multiplier", multiplier);
-        save();
+        reload();
     }
 
-    public YamlConfiguration getConfig() {
+    public boolean isVerbose()
+    {
+        return config.getBoolean("verbose");
+    }
+
+    public void setVerbose(final boolean verbose)
+    {
+        config.set("verbose", verbose);
+        reload();
+    }
+
+    public void setUsername(String name)
+    {
+        config.set("username", name);
+        reload();
+    }
+
+    public YamlConfiguration getConfig()
+    {
         return config;
     }
 }

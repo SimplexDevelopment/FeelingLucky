@@ -4,6 +4,7 @@ import io.github.simplex.lib.ItemBuilder;
 import io.github.simplex.lib.MiniComponent;
 import io.github.simplex.luck.FeelingLucky;
 import io.github.simplex.luck.player.Luck;
+import net.kyori.adventure.audience.Audience;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
@@ -23,6 +24,7 @@ public final class BonemealFullCrop extends AbstractListener {
     @EventHandler
     public void bonemealFullCrop(PlayerInteractEvent event) {
         Player player = event.getPlayer();
+        Audience pAud = player;
         Action action = event.getAction();
         ItemStack bonemeal = ItemBuilder.of(Material.BONE_MEAL).build();
         Luck luck = getHandler().getLuckContainer(player);
@@ -43,6 +45,12 @@ public final class BonemealFullCrop extends AbstractListener {
             crop.setAge(crop.getMaximumAge());
             data.merge(crop);
             block.setBlockData(data);
+
+            if (luck.isVerbose()) {
+                asAudience(player).sendMessage(MiniComponent.info("Your luck has caused your crop to become ready for" +
+                                                                  " " +
+                                                         "harvest!"));
+            }
         }
     }
 }

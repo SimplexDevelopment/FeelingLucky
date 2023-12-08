@@ -1,10 +1,12 @@
 package io.github.simplex.lib;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 
 public class MiniComponent {
     private final String content;
@@ -21,17 +23,17 @@ public class MiniComponent {
     }
 
     @Contract("_ -> new")
-    public static Component info(String content) {
+    public static ComponentLike info(String content) {
         return new MiniComponent(content).color(ChatColor.GREEN).send();
     }
 
     @Contract("_ -> new")
-    public static Component warn(String content) {
+    public static ComponentLike warn(String content) {
         return new MiniComponent(content).color(ChatColor.YELLOW).decorate(TextDecoration.ITALIC).send();
     }
 
     @Contract("_ -> new")
-    public static Component err(String content) {
+    public static ComponentLike err(String content) {
         return new MiniComponent(content).color(ChatColor.RED).decorate(TextDecoration.BOLD).send();
     }
 
@@ -45,7 +47,7 @@ public class MiniComponent {
         return this;
     }
 
-    public Component send() {
+    public @Nullable Component send() {
         if (color == null) {
             if (decoration == null) return Component.empty().content(content);
 

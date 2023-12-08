@@ -21,7 +21,7 @@ public class SneakyWorker {
                     + ex.getClass().getSimpleName()
                     + " has occurred. A cause will be printed. \n\n"
                     + ex.getCause();
-            Bukkit.getLogger().severe(sb);
+            Logs.error(sb);
         }
     }
 

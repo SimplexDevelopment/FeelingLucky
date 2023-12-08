@@ -1,10 +1,14 @@
 package io.github.simplex.api;
 
+import java.io.Serializable;
 import org.bukkit.entity.Player;
 
-import java.io.Serializable;
+public interface LuckContainer extends Serializable
+{
 
-public interface LuckContainer extends Serializable {
+    boolean isVerbose();
+
+    void setVerbose(boolean verbose);
 
     boolean isMatch(double number);
 

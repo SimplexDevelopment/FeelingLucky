@@ -1,8 +1,9 @@
 package io.github.simplex.luck.listener;
 
-import io.github.simplex.luck.Config;
 import io.github.simplex.luck.FeelingLucky;
 import io.github.simplex.luck.player.PlayerHandler;
+import net.kyori.adventure.audience.Audience;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
 public abstract class AbstractListener implements Listener {
@@ -34,5 +35,9 @@ public abstract class AbstractListener implements Listener {
         MED,
         LOW,
         NONE
+    }
+
+    public Audience asAudience(final Player player) {
+        return player;
     }
 }

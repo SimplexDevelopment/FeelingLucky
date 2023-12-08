@@ -11,30 +11,41 @@ import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class UnbreakableTool extends AbstractListener {
-    public UnbreakableTool(FeelingLucky plugin) {
+public class UnbreakableTool extends AbstractListener
+{
+    public UnbreakableTool(FeelingLucky plugin)
+    {
         super(plugin);
         register(this);
     }
 
     @EventHandler
-    public void unbreakableTool(CraftItemEvent event) {
+    public void unbreakableTool(CraftItemEvent event)
+    {
         CraftingInventory inventory = event.getInventory();
         ItemStack stack = inventory.getResult();
 
-        if (stack == null) return;
+        if (stack == null)
+            return;
         ItemMeta meta = stack.getItemMeta();
 
-        if (ItemBuilder.isTool(stack.getType())) {
-            if (event.getWhoClicked() instanceof Player player) {
-                Luck luck = getHandler().getLuckContainer(player);
-                if (luck.quickRNG(luck.getValue()) && doesQualify("unbreakable", luck.getValue())) {
-                    meta.setUnbreakable(true);
-                    stack.setItemMeta(meta);
-                    inventory.setResult(stack);
-                    player.sendMessage(MiniComponent.info("By the grace of Luck you have crafted an unbreakable tool!"));
+        if (ItemBuilder.isTool(stack.getType()) && (event.getWhoClicked() instanceof Player player))
+        {
+            Luck luck = getHandler().getLuckContainer(player);
+            if (luck.quickRNG(luck.getValue()) && doesQualify("unbreakable", luck.getValue()))
+            {
+                meta.setUnbreakable(true);
+                stack.setItemMeta(meta);
+                inventory.setResult(stack);
+
+                if (luck.isVerbose())
+                {
+                    asAudience(player)
+                        .sendMessage(
+                            MiniComponent.info("By the grace of Luck you have crafted an unbreakable tool!"));
                 }
             }
+
         }
     }
 }

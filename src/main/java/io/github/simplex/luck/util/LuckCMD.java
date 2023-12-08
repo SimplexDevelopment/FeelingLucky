@@ -114,6 +114,17 @@ public class LuckCMD extends Command implements TabCompleter, PluginIdentifiable
                     return true;
                 }
 
+                if (args[0].equalsIgnoreCase("verbose") && sender instanceof Player player) {
+                    final boolean a1 = Boolean.parseBoolean(args[1]);
+                    Luck luck = plugin.getHandler().getLuckContainer(player);
+                    PlayerConfig config = plugin.getConfigMap().get(player.getUniqueId());
+                    luck.setVerbose(a1);
+                    plugin.getHandler().updatePlayer(player, luck);
+                    config.setVerbose(a1);
+                    sender.sendMessage(MiniComponent.info("Verbose mode set to " + a1 + "."));
+                    return true;
+                }
+
                 if (args[0].equalsIgnoreCase("reset")) {
                     Player player = Bukkit.getPlayer(args[1]);
 

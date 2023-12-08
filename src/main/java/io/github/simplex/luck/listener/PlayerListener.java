@@ -37,15 +37,16 @@ public final class PlayerListener extends AbstractListener {
         Luck luck = getHandler().getLuckContainer(player);
 
         if (timer.onCooldown(player)) {
-            player.sendMessage(MiniComponent.err("That feature can only be used once every 30 seconds."));
-            player.sendMessage(MiniComponent.info("You have " + timer.remaining(player) + " seconds remaining."));
+            asAudience(player).sendMessage(MiniComponent.err("That feature can only be used once every 30 seconds."));
+            asAudience(player).sendMessage(MiniComponent.info("You have " + timer.remaining(player) + " seconds " +
+                                                           "remaining."));
             return;
         }
 
         if (action.isRightClick() && player.getInventory().getItemInMainHand().getType().equals(foot.getType())) {
             if (foot.getItemMeta().equals(special.meta()) || foot.equals(special.get())) {
                 luck.setMultiplier(luck.multiplier() + 0.1);
-                player.sendMessage(MiniComponent.info("Your luck multiplier has increased by 0.1!"));
+                asAudience(player).sendMessage(MiniComponent.info("Your luck multiplier has increased by 0.1!"));
             }
             double rng = Luck.RNG().nextDouble(2.0, 5.0);
             rng = Math.round(rng);
@@ -53,7 +54,7 @@ public final class PlayerListener extends AbstractListener {
             luck.addTo(rng);
             plugin.getHandler().updatePlayer(player, luck);
             timer.setCooldown(player.getUniqueId(), System.currentTimeMillis());
-            player.sendMessage(MiniComponent.info("Your luck has been increased by " + rng + " points."));
+            asAudience(player).sendMessage(MiniComponent.info("Your luck has been increased by " + rng + " points."));
         }
     }
 
@@ -76,7 +77,7 @@ public final class PlayerListener extends AbstractListener {
             if (luck.quickRNG(33.0)) {
                 luck.takeFrom(5.0);
                 plugin.getHandler().updatePlayer(player, luck);
-                player.sendMessage(MiniComponent.warn("Your luck has been decreased by 5 points!"));
+                asAudience(player).sendMessage(MiniComponent.warn("Your luck has been decreased by 5 points!"));
             }
         }
     }

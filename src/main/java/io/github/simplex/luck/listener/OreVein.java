@@ -15,7 +15,13 @@ import org.bukkit.event.block.BlockBreakEvent;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.jetbrains.annotations.ApiStatus;
 
+/**
+ * This class is currently unstable.
+ */
+@Deprecated
+@ApiStatus.Experimental
 public class OreVein extends AbstractListener {
 
     public OreVein(FeelingLucky plugin) {

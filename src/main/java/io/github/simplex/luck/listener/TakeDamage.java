@@ -25,8 +25,7 @@ public class TakeDamage extends AbstractListener {
         }
         Player player = (Player) event.getEntity();
         Luck luck = getHandler().getLuckContainer(player);
-        if (ListBox.acceptedCauses.contains(event.getCause())) {
-            if (luck.notDefault()) {
+        if (ListBox.acceptedCauses.contains(event.getCause()) && (luck.notDefault())) {
                 double percentage = luck.getValue();
 
                 /*
@@ -38,7 +37,7 @@ public class TakeDamage extends AbstractListener {
                     if (luck.quickRNG(percentage)) {
                         event.setCancelled(true);
                         player.damage(event.getDamage() * 2);
-                        player.sendMessage(MiniComponent.warn("You were unlucky and took double damage!"));
+                        asAudience(player).sendMessage(MiniComponent.warn("You were unlucky and took double damage!"));
                     }
                     return;
                 }
@@ -47,11 +46,10 @@ public class TakeDamage extends AbstractListener {
                     event.setCancelled(true);
                     player.damage(event.getDamage() / 2);
                 }
-            }
+
         }
 
-        if (ListBox.sideCauses.contains(event.getCause())) {
-            if (luck.notDefault()) {
+        if (ListBox.sideCauses.contains(event.getCause()) && (luck.notDefault())) {
                 double percentage = luck.getValue();
 
                 /*
@@ -71,9 +69,10 @@ public class TakeDamage extends AbstractListener {
                     event.setCancelled(true);
                     player.getActivePotionEffects().removeIf(p -> ListBox.potionEffects.contains(p.getType()));
                     player.setFireTicks(0);
-                    player.sendMessage(MiniComponent.info("You got lucky and your afflictions were cured."));
+                    asAudience(player).sendMessage(MiniComponent.info("You got lucky and your afflictions were cured" +
+                                                                      "."));
                 }
-            }
+
         }
     }
 }

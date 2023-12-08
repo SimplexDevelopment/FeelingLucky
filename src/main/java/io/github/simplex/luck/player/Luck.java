@@ -25,6 +25,7 @@ public class Luck implements LuckContainer {
     private double BASE_VALUE;
     private double multiplier;
     private double tempSave;
+    private boolean verbose;
 
     public Luck(FeelingLucky plugin, Player player) {
         this(plugin, player, 1.0);
@@ -83,6 +84,16 @@ public class Luck implements LuckContainer {
 
     public boolean isMarked(Player player) {
         return markedPlayers.contains(player);
+    }
+
+    @Override
+    public void setVerbose(final boolean verbose) {
+        this.verbose = verbose;
+    }
+
+    @Override
+    public boolean isVerbose() {
+        return verbose;
     }
 
     @Override

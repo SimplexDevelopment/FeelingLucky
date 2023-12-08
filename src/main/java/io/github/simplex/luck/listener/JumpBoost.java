@@ -21,7 +21,11 @@ public class JumpBoost extends AbstractListener {
         Vector velocity = player.getVelocity().clone();
 
         if (luck.quickRNG(luck.getValue()) && doesQualify("jump_boost", luck.getValue())) {
-            player.setVelocity(new Vector(velocity.getX(), velocity.getY() + 3, velocity.getZ()));
+            player.setVelocity(velocity.multiply(2.5));
+
+            if (luck.isVerbose()) {
+                asAudience(player).sendMessage(MiniComponent.info("Your luck gave you an extra boost to your jump!"));
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-# <center>FeelingLucky v1.2.0 - A luck driven mechanics plugin.</center>
+# <center>FeelingLucky v1.3.0 - A luck driven mechanics plugin.</center>
 
 ## <center><u><span style="color:blue">Plugin Description:</u></center>
 

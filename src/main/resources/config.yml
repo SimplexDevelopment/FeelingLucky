@@ -11,11 +11,11 @@ low_rarity_chance: 64.0
 # The following entries are for the rarity level of each event trigger.
 # This will determine which rarity chance to use which ensures players
 # The following values are accepted: NONE, LOW, MED, HIGH
-#     - None implies that there is no rarity chance attributed to that feature.
+#- None implies that there is no rarity chance attributed to that feature.
 # These entries are case-sensitive.
 
 block_drops: LOW
-bonemeal: MED
+bone_meal: MED
 cheat_death: MED
 enchanting: HIGH
 experience: HIGH

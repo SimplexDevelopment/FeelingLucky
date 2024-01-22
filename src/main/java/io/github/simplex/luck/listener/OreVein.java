@@ -11,11 +11,12 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.jetbrains.annotations.ApiStatus;
 
 /**
  * This class is currently unstable.
@@ -30,7 +31,7 @@ public class OreVein extends AbstractListener {
     }
 
     @EventHandler
-    public void playerMine(BlockBreakEvent event) {
+    public void playerMine(@NotNull BlockBreakEvent event) {
         Player player = event.getPlayer();
         Luck luck = plugin.getHandler().getLuckContainer(player);
         if (luck.quickRNG(luck.getValue()) && doesQualify("ore_vein", luck.getValue()) && event.getBlock().isValidTool(player.getInventory().getItemInMainHand())) {
@@ -39,22 +40,26 @@ public class OreVein extends AbstractListener {
         }
     }
 
-    public List<Block> getOresInArea(Block block) {
+    public List<Block> getOresInArea(@NotNull Block block) {
         Stream.Builder<Block> streamBuilder = Stream.builder();
         Location start = block.getLocation();
         World world = block.getWorld();
-        List<Tag<Material>> materialList = List.of(Tag.COAL_ORES, Tag.COPPER_ORES, Tag.DIAMOND_ORES, Tag.GOLD_ORES, Tag.IRON_ORES, Tag.EMERALD_ORES, Tag.LAPIS_ORES, Tag.REDSTONE_ORES);
+        List<Tag<Material>> materialList = List.of(
+                Tag.COAL_ORES, Tag.COPPER_ORES, Tag.DIAMOND_ORES,
+                Tag.GOLD_ORES, Tag.IRON_ORES, Tag.EMERALD_ORES,
+                Tag.LAPIS_ORES, Tag.REDSTONE_ORES
+        );
         for (int x = start.getBlockX() - 15; x <= start.getBlockX() + 15; x++) {
             for (int y = start.getBlockY() - 15; y <= start.getBlockY() + 15; y++) {
                 for (int z = start.getBlockZ() - 15; z <= start.getBlockZ() + 15; z++) {
                     Location location = new Location(world, x, y, z);
                     Material blockType = location.getBlock().getType();
-                    if (materialList.stream().anyMatch(o -> o.isTagged(blockType))) {
+                    if (materialList.stream().anyMatch(tag -> tag.isTagged(blockType))) {
                         streamBuilder.add(location.getBlock());
                     }
                 }
             }
         }
-        return streamBuilder.build().filter(b -> b.getType().equals(block.getType())).toList();
+        return streamBuilder.build().collect(Collectors.toList());
     }
 }

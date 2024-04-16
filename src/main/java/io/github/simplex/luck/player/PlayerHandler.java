@@ -1,6 +1,7 @@
 package io.github.simplex.luck.player;
 
 import io.github.simplex.luck.FeelingLucky;
+import io.github.simplex.sql.SQLType;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -41,7 +42,7 @@ public class PlayerHandler implements Listener {
         String username = playerConfig.getUsername();
         double luck = playerConfig.getLuck();
         double multiplier = playerConfig.getMultiplier();
-        boolean verbose = playerConfig.isVerbose();
+        boolean verbose = plugin.getConfig().isVerboseGlobal() && playerConfig.isVerbose();
 
         if (!player.getName().equalsIgnoreCase(username)) {
             playerConfig.getConfig().set("username", player.getName());

@@ -115,6 +115,12 @@ public class LuckCMD extends Command implements TabCompleter, PluginIdentifiable
                 }
 
                 if (args[0].equalsIgnoreCase("verbose") && sender instanceof Player player) {
+
+                    if (!plugin.getConfig().isVerboseGlobal()) {
+                        player.sendMessage(Messages.VERBOSE_DISABLED.get());
+                        return true;
+                    }
+
                     final boolean a1 = Boolean.parseBoolean(args[1]);
                     Luck luck = plugin.getHandler().getLuckContainer(player);
                     PlayerConfig config = plugin.getConfigMap().get(player.getUniqueId());

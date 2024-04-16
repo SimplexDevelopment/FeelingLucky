@@ -6,10 +6,12 @@ import io.github.simplex.luck.util.SneakyWorker;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+
+import io.github.simplex.sql.SQLType;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("ResultOfMethodCallIgnored")
 public class Config extends YamlConfiguration
 {
     private final Map<String, Object> configEntries = new HashMap<>()
@@ -17,6 +19,7 @@ public class Config extends YamlConfiguration
         put("high_rarity_chance", 512.0);
         put("medium_rarity_chance", 128.0);
         put("low_rarity_chance", 64.0);
+        put("global_verbosity", true);
         put("block_drops", "LOW");
         put("bonemeal", "MED");
         put("cheat_death", "MED");
@@ -32,7 +35,7 @@ public class Config extends YamlConfiguration
         put("take_damage", "MED");
         put("unbreakable", "HIGH");
     }};
-    private File configFile;
+    private final File configFile;
 
     public Config(FeelingLucky plugin)
     {
@@ -112,5 +115,103 @@ public class Config extends YamlConfiguration
     public double getChance(String path)
     {
         return getDouble(path);
+    }
+
+    public boolean isVerboseGlobal() {
+        return getBoolean("global_verbosity");
+    }
+
+    public SQLType getSQLType() {
+        return SQLType.fromString(Objects.requireNonNull(getString("database_type")));
+    }
+
+    public SQLiteWrapper getSQLite() {
+        return new SQLiteWrapper();
+    }
+
+    public RedisWrapper getRedis() {
+        return new RedisWrapper();
+    }
+
+    public MySQLWrapper getMySQL() {
+        return new MySQLWrapper();
+    }
+
+    public final class SQLiteWrapper {
+        private final String path;
+
+        public SQLiteWrapper() {
+            this.path = getString("sqlite.path");
+        }
+
+        public String getPath() {
+            return path;
+        }
+    }
+
+    public final class RedisWrapper {
+        private final String host;
+        private final String port;
+        private final String password;
+        private final int database;
+
+        public RedisWrapper() {
+            this.host = getString("redis.host");
+            this.port = getString("redis.port");
+            this.password = getString("redis.password");
+            this.database = getInt("redis.database");
+        }
+
+        public String getHost() {
+            return host;
+        }
+
+        public String getPort() {
+            return port;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public int getDatabase() {
+            return database;
+        }
+    }
+
+    public final class MySQLWrapper {
+        private final String host;
+        private final int port;
+        private final String database;
+        private final String username;
+        private final String password;
+
+        public MySQLWrapper() {
+            this.host = getString("mysql.host");
+            this.port = getInt("mysql.port");
+            this.database = getString("mysql.database");
+            this.username = getString("mysql.username");
+            this.password = getString("mysql.password");
+        }
+
+        public String getHost() {
+            return host;
+        }
+
+        public int getPort() {
+            return port;
+        }
+
+        public String getDatabase() {
+            return database;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public String getPassword() {
+            return password;
+        }
     }
 }

@@ -20,13 +20,12 @@ public class PlayerConfig
     private final FeelingLucky plugin;
     private YamlConfiguration config;
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
+
     public PlayerConfig(FeelingLucky plugin, Player player)
     {
         this.plugin = plugin;
         this.player = player;
-        final File file = configFile(plugin, player);
-        configFile = file;
+        configFile = configFile(plugin, player);
         config = YamlConfiguration.loadConfiguration(configFile);
 
         String tempUsername = config.getString("username");
@@ -36,6 +35,7 @@ public class PlayerConfig
             config.set("username", player.getName());
             config.set("luck", plugin.getHandler().getLuckContainer(player).getDefaultValue());
             config.set("multiplier", "1.0");
+            config.set("verbose", plugin.getConfig().isVerboseGlobal());
             save();
         }
     }
@@ -48,14 +48,43 @@ public class PlayerConfig
         config = YamlConfiguration.loadConfiguration(configFile);
     }
 
+    protected PlayerConfig(FeelingLucky plugin, DynamicConfig user)
+    {
+        this.plugin = plugin;
+        this.player = Bukkit.getOfflinePlayer(UUID.fromString(user.getPlayerUUID()));
+        configFile = configFile(plugin, player);
+        config = YamlConfiguration.loadConfiguration(configFile);
+    }
+
     @Contract("_, _ -> new")
-    public static PlayerConfig initFrom(FeelingLucky plugin, File file)
+    public static PlayerConfig initFromFile(FeelingLucky plugin, File file)
     {
         return new PlayerConfig(plugin, file);
     }
 
+    public static PlayerConfig fromDynamicConfig(FeelingLucky plugin, DynamicConfig config)
+    {
+        PlayerConfig playerConfig = new PlayerConfig(plugin, config);
+        playerConfig.setUsername(config.getPlayerUUID());
+        playerConfig.setLuck(config.getLuckValue());
+        playerConfig.setMultiplier(config.getMultiplier());
+        playerConfig.setVerbose(config.isVerbose());
+        return playerConfig;
+    }
+
+    public DynamicConfig toDynamicConfig()
+    {
+        DynamicConfig dynamicConfig = new DynamicConfig();
+        dynamicConfig.setPlayerUUID(player.getUniqueId());
+        dynamicConfig.setLuckValue(getLuck());
+        dynamicConfig.setVerbose(isVerbose());
+        dynamicConfig.setMultiplier(getMultiplier());
+        return dynamicConfig;
+    }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @NotNull
-    private File configFile(FeelingLucky plugin, Player player)
+    private File configFile(FeelingLucky plugin, OfflinePlayer player)
     {
         if (!plugin.getDataFolder().exists())
             plugin.getDataFolder().mkdirs();
@@ -72,7 +101,7 @@ public class PlayerConfig
                 v0.set("username", player.getName());
                 v0.set("luck", 0);
                 v0.set("multiplier", 1.0);
-                v0.set("verbose", true);
+                v0.set("verbose", plugin.getConfig().isVerboseGlobal());
                 v0.save(file);
             }
             catch (IOException ex)

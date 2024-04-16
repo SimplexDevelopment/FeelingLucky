@@ -88,12 +88,19 @@ public class Luck implements LuckContainer {
 
     @Override
     public void setVerbose(final boolean verbose) {
+        if (!plugin.getConfig().isVerboseGlobal())
+            return;
+
         this.verbose = verbose;
     }
 
     @Override
     public boolean isVerbose() {
-        return verbose;
+        if (plugin.getConfig().isVerboseGlobal()) {
+            return verbose;
+        }
+
+        return false;
     }
 
     @Override

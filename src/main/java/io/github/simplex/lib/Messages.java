@@ -8,7 +8,8 @@ public enum Messages
     NOT_FROM_CONSOLE(MiniComponent.err("This command may only be used in game.")),
     NO_PERMISSION(MiniComponent.err("You do not have permission to use this command.")),
     NO_PLAYER(MiniComponent.warn("That player cannot be found.")),
-    OUT_OF_BOUNDS(MiniComponent.err("Number must be between -1024.0 and 1024.0"));
+    OUT_OF_BOUNDS(MiniComponent.err("Number must be between -1024.0 and 1024.0")),
+    VERBOSE_DISABLED(MiniComponent.err("Verbose mode is currently disabled globally."));
 
     private final ComponentLike message;
 

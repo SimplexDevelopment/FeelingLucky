@@ -8,6 +8,11 @@ high_rarity_chance: 512.0
 medium_rarity_chance: 128.0
 low_rarity_chance: 64.0
 
+# Change whether verbosity is enabled globally or not.
+# If the verbosity is set to true, then all players will have the option to turn it off for themselves only.
+# If the verbosity is set to false, then players will not have the option to turn it on.
+global_verbosity: true
+
 # The following entries are for the rarity level of each event trigger.
 # This will determine which rarity chance to use which ensures players
 # The following values are accepted: NONE, LOW, MED, HIGH
@@ -28,3 +33,28 @@ random_effect: HIGH
 restore_hunger: NONE
 take_damage: MED
 unbreakable: HIGH
+
+# This section is for Database storage.
+# If you wish to use a database, you must fill out the following information.
+
+#database_types: MYSQL, SQLITE, REDIS, NONE
+database_type: NONE
+
+# MySQL Database
+mysql:
+  host: localhost
+  port: 3306
+  database: minecraft
+  username: root
+  password: password
+
+# SQLite Database
+sqlite:
+  path: database.db
+
+# Redis Database
+redis:
+  host: localhost
+  port: 6379
+  password: password
+  database: 0
